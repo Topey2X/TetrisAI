@@ -1,7 +1,7 @@
 import gym
 ###############################################################
-#from gym_simpletetris.envs.tetris_env import TetrisEnv
-import gym_simpletetris
+# from gym_simpletetris.envs import TetrisEnv
+from gym_simpletetris.envs import TetrisEnv
 ###############################################################
 # import pybullet_envs
 import pybullet as p

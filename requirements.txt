@@ -1,0 +1,6 @@
+gym
+pybullet
+numpy
+torch
+matplotlib
+gym-simpletetris

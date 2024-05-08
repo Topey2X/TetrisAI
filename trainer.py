@@ -6,26 +6,25 @@ from Tetris_DQN_Solver import *
 
 ############################################################################################
 
-TRAIN = True  # if set to false will skip training, load the last saved model and use that for testing
 # Train network
-if TRAIN:
+def train:
     #env = gym.make("SimpleDriving-v0", apply_api_compatibility=True, renders=True, isDiscrete=True)
     env = gym.make('SimpleTetris-v0',
-               height=20,                       # Height of Tetris grid
-               width=10,                        # Width of Tetris grid
-               obs_type='ram',            # ram | grayscale | rgb
-               extend_dims=False,               # Extend ram or grayscale dimensions
-               render_mode='rgb_array',         # Unused parameter
-               reward_step=False,               # See reward table
-               penalise_height=False,           # See reward table
-               penalise_height_increase=False,  # See reward table
-               advanced_clears=False,           # See reward table
-               high_scoring=False,              # See reward table
-               penalise_holes=False,            # See reward table
-               penalise_holes_increase=False,   # See reward table
-               lock_delay=0,                    # Lock delay as number of steps
-               step_reset=False                 # Reset lock delay on step downwards
-               )
+        height=20,                       # Height of Tetris grid
+        width=10,                        # Width of Tetris grid
+        obs_type='ram',            # ram | grayscale | rgb
+        extend_dims=False,               # Extend ram or grayscale dimensions
+    #    render_mode='human',         # Unused parameter
+        reward_step=False,               # See reward table
+        penalise_height=False,           # See reward table
+        penalise_height_increase=False,  # See reward table
+        advanced_clears=False,           # See reward table
+        high_scoring=False,              # See reward table
+        penalise_holes=False,            # See reward table
+        penalise_holes_increase=False,   # See reward table
+        lock_delay=0,                    # Lock delay as number of steps
+        step_reset=False                 # Reset lock delay on step downwards
+    )
     # set manual seeds so we get same behaviour everytime - so that when you change your hyper parameters you can attribute the effect to those changes
     env.action_space.seed(0)
     random.seed(0)
@@ -77,8 +76,11 @@ if TRAIN:
         elif agent.memory.mem_count < REPLAY_START_SIZE:
             print("waiting for buffer to fill...")
             episode_batch_score = 0
+            
+    torch.save(agent.policy_network.state_dict(), "latest_model.pkl")
 
     plt.plot(episode_history, episode_reward_history)
     plt.show()
 
-
+if __name__ == "__main__":
+    
