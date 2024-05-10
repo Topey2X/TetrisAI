@@ -412,6 +412,7 @@ class TetrisEnv(gym.Env):
 
     def _observation(self, mode=None, state=None, extend_dims=None):
         obs = state
+        obs = obs.flatten()
 
         if obs is None:
             obs = self.engine.render()
