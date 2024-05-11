@@ -426,59 +426,36 @@ class TetrisEnv(gym.Env):
             else:
                 return convert_grayscale_rgb(obs).flatten()
 
-def render(self, mode='human'):
-    if mode == 'human':
-        if self.window is None:
-            pygame.init()
-            pygame.display.init()
-            self.window = pygame.display.set_mode((self.window_size, self.window_size))
-        if self.clock is None:
-            self.clock = pygame.time.Clock()
+    def render(self, mode='human'):
+        if mode == 'human':
+            if self.window is None:
+                pygame.init()
+                pygame.display.init()
+                self.window = pygame.display.set_mode((self.window_size, self.window_size))
+            if self.clock is None:
+                self.clock = pygame.time.Clock()
 
-        # Get the current state for rendering
-        obs = self.engine.render()
-
-        # Ensure the board is correctly reshaped and converted for rendering
-        if self.obs_type == 'ram':
-            obs = obs.reshape((self.width, self.height))
-        elif self.obs_type == 'grayscale':
-            # Convert grayscale with proper dimensions and ensure data type is uint8
+            obs = self.engine.render()
+            obs = np.transpose(obs)
             obs = convert_grayscale(obs, self.window_size, self.width, self.height)
-            obs = obs.astype(np.uint8)
-        else:  # 'rgb'
-            obs = obs.reshape((self.width, self.height))
-            obs = convert_grayscale_rgb(obs)
-            obs = obs.astype(np.uint8)
-
-        # Convert the observation to display in Pygame
-        pygame.pixelcopy.array_to_surface(self.window, obs)
-
-        canvas = pygame.surfarray.make_surface(obs)
-
-        self.window.blit(canvas, canvas.get_rect())
-        pygame.event.pump()
-        pygame.display.update()
-
-        self.clock.tick(self.metadata["render_fps"])
-    elif mode == 'rgb_array':
-        obs = self.engine.render()
-
-        # Ensure proper conversion for the RGB array mode
-        if self.obs_type == 'ram':
-            obs = obs.reshape((self.width, self.height))
-            obs = convert_grayscale(obs, 160, self.width, self.height)
-        elif self.obs_type == 'grayscale':
-            # Correctly reshape and convert for 1D array handling in grayscale
-            obs = convert_grayscale(obs, 160, self.width, self.height)
-        else:  # 'rgb'
-            obs = obs.reshape((self.width, self.height))
             obs = convert_grayscale_rgb(obs)
 
-        obs = obs.astype(np.uint8)  # Ensure data type is uint8 for RGB array
+            pygame.pixelcopy.array_to_surface(self.window, obs)
 
-        return obs
-    else:
-        super(TetrisEnv, self).render(mode=mode)
+            canvas = pygame.surfarray.make_surface(obs)
+
+            self.window.blit(canvas, canvas.get_rect())
+            pygame.event.pump()
+            pygame.display.update()
+
+            self.clock.tick(self.metadata["render_fps"])
+        elif mode == 'rgb_array':
+            obs = self.engine.render()
+            obs = convert_grayscale(obs, 160)
+            obs = convert_grayscale_rgb(obs)
+            return obs
+        else:
+            super(TetrisEnv, self).render(mode=mode)
 
 
     def close(self):

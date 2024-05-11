@@ -7,7 +7,7 @@ def test_model(model_file):
   env = TetrisEnv(
         height=20,                       # Height of Tetris grid
         width=10,                        # Width of Tetris grid
-        obs_type='grayscale',                  # ram | grayscale | rgb
+        obs_type='ram',                  # ram | grayscale | rgb
         extend_dims=False,               # Extend ram or grayscale dimensions
     #    render_mode='human',         # Unused parameter
         reward_step=True,               # See reward table
@@ -32,7 +32,7 @@ def test_model(model_file):
 
   while True:
     try:
-      for _ in range(200):
+      while True:
         observation = torch.tensor(state).float().detach()
         observation.unsqueeze(0)
         with torch.no_grad():       # so we don't compute gradients - save memory and computation
@@ -40,6 +40,7 @@ def test_model(model_file):
 
         action = torch.argmax(q_values).item()
         state, _, done, info = env.step(action)
+        env.render()
         if done:
           break
       state = env.reset()
@@ -55,5 +56,5 @@ def test_model(model_file):
   
 
 if __name__ == "__main__":
-  model_file = "models\\240511-125825\\policy_network_final.pkl"
+  model_file = "models/240511-145328/policy_network21.pkl"
   test_model(model_file)
