@@ -4,9 +4,24 @@ from model import Network
 from gym_simpletetris.envs import TetrisEnv
 
 def test_model(model_file):
-  env = TetrisEnv(renders=True, isDiscrete=True)
-
-  state = np.array(env.getExtendedObservation(), dtype=np.float32)
+  env = TetrisEnv(
+        height=20,                       # Height of Tetris grid
+        width=10,                        # Width of Tetris grid
+        obs_type='grayscale',                  # ram | grayscale | rgb
+        extend_dims=False,               # Extend ram or grayscale dimensions
+    #    render_mode='human',         # Unused parameter
+        reward_step=True,               # See reward table
+        penalise_height=True,           # See reward table
+        penalise_height_increase=True,  # See reward table
+        advanced_clears=False,           # See reward table
+        high_scoring=True,              # See reward table
+        penalise_holes=True,            # See reward table
+        penalise_holes_increase=False,   # See reward table
+        lock_delay=0,                    # Lock delay as number of steps
+        step_reset=False                 # Reset lock delay on step downwards
+    )
+  state = env.reset()
+  env.render()
 
   checkpoint = torch.load(model_file)
   policy_network = Network(env)
@@ -25,14 +40,14 @@ def test_model(model_file):
 
         action = torch.argmax(q_values).item()
         state, _, done, info = env.step(action)
-        if info['reached_goal'] or info['hit_obstacle']:
-          results.append(info['reached_goal'])
+        if done:
           break
       state = env.reset()
-    except:
+    except KeyboardInterrupt:
+      print("Finished!")
       break
 
-  print(f'Success rate: {results.count(True)}/{len(results)} ({100*results.count(True)/len(results)}%)')
+  # print(f'Success rate: {results.count(True)}/{len(results)} ({100*results.count(True)/len(results)}%)')
   try:
     env.close()
   except:
@@ -40,5 +55,5 @@ def test_model(model_file):
   
 
 if __name__ == "__main__":
-  model_file = "models/240415-150753/policy_network_final.pkl"
+  model_file = "models\\240511-125825\\policy_network_final.pkl"
   test_model(model_file)

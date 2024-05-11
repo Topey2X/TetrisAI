@@ -20,16 +20,16 @@ def train(starting_policy=None):
     env = TetrisEnv(
         height=20,                       # Height of Tetris grid
         width=10,                        # Width of Tetris grid
-        obs_type='grayscale',                  # ram | grayscale | rgb
+        obs_type='ram',                  # ram | grayscale | rgb
         extend_dims=False,               # Extend ram or grayscale dimensions
     #    render_mode='human',         # Unused parameter
         reward_step=True,               # See reward table
         penalise_height=True,           # See reward table
         penalise_height_increase=True,  # See reward table
-        advanced_clears=True,           # See reward table
+        advanced_clears=False,           # See reward table
         high_scoring=True,              # See reward table
         penalise_holes=True,            # See reward table
-        penalise_holes_increase=True,   # See reward table
+        penalise_holes_increase=False,   # See reward table
         lock_delay=0,                    # Lock delay as number of steps
         step_reset=False                 # Reset lock delay on step downwards
     )
@@ -56,9 +56,12 @@ def train(starting_policy=None):
             state = (
                 env.reset()
             )  # this needs to be called once at the start before sending any actions
+            # print(state)
             while True:
                 # sampling loop - sample random actions and add them to the replay buffer
                 action = agent.choose_action(state)
+                # print(action)
+                exit
                 state_, reward, done, info = env.step(action)
 
                 if done:

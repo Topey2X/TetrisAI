@@ -38,7 +38,7 @@ device = torch.device("cpu")
 class Network(torch.nn.Module):
     def __init__(self, env):
         super().__init__()
-        self.input_shape = np.zeros(env.observation_space.shape).flatten().shape
+        self.input_shape = env.observation_space.shape
         self.action_space = env.action_space.n
 
         # build an MLP with 2 hidden layers
