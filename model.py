@@ -20,8 +20,8 @@ EPS_DECAY = 4 * MEM_SIZE        # Amount of samples we decay epsilon over
 MEM_RETAIN = 0.1                # Percentage of initial samples in replay memory to keep - for catastrophic forgetting
 NETWORK_UPDATE_ITERS = 5000     # Number of samples 'C' for slowly updating the target network \hat{Q}'s weights with the policy network Q's weights
 
-FC1_DIMS = 256                   # Number of neurons in our MLP's first hidden layer
-FC2_DIMS = 256                   # Number of neurons in our MLP's second hidden layer
+FC1_DIMS = 512                   # Number of neurons in our MLP's first hidden layer
+FC2_DIMS = 512                   # Number of neurons in our MLP's second hidden layer
 # FC3_DIMS = 128                   # Number of neurons in our MLP's third hidden layer
 
 # metrics for displaying training status
@@ -31,8 +31,8 @@ episode_history = []
 episode_reward_history = []
 np.bool = np.bool_ # backwards compatability.
 
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cpu")
 
 # for creating the policy and target networks - same architecture
 class Network(torch.nn.Module):
@@ -155,3 +155,6 @@ class DQN_Solver:
 
     def returning_epsilon(self):
         return self.exploration_rate
+    
+if __name__ == "__main__":
+    print("Idiot, run the trainer, not the model ...")

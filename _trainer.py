@@ -28,8 +28,8 @@ def train(starting_policy=None):
         penalise_height_increase=True,  # See reward table
         advanced_clears=False,           # See reward table
         high_scoring=True,              # See reward table
-        penalise_holes=True,            # See reward table
-        penalise_holes_increase=False,   # See reward table
+        penalise_holes=False,            # See reward table
+        penalise_holes_increase=True,   # See reward table
         lock_delay=0,                    # Lock delay as number of steps
         step_reset=False                 # Reset lock delay on step downwards
     )
@@ -41,6 +41,7 @@ def train(starting_policy=None):
     episode_batch_score = 0
     episode_reward = 0
     report_every = 100
+    save_every = 500
     agent = DQN_Solver(env)  # create DQN agent
     if starting_policy is not None:  # load current policy if given
         checkpoint = torch.load(starting_policy)
@@ -88,12 +89,13 @@ def train(starting_policy=None):
             # save our model every batches of 100 episodes so we can load later. (note: you can interrupt the training any time and load the latest saved model when testing)
             if ((i + 1) % report_every) == 0:
                 if agent.memory.mem_count > REPLAY_START_SIZE:
-                    torch.save(
-                        {"policy": agent.policy_network.state_dict()},
-                        f"{working_dir}/policy_network{i // 100}.pkl",
-                    )
+                    if ((i + 1) % save_every) == 0:
+                        torch.save(
+                            {"policy": agent.policy_network.state_dict()},
+                            f"{working_dir}/policy_network{(i // 100)+1}.pkl",
+                        )
                     print(
-                        f"EPISODES {i-report_every+1}-{i+1}: Average total reward per episode batch: {episode_batch_score/ float(100)}"
+                        f"EPISODES {i-report_every+1}-{i+1}: Average total reward per episode batch: {episode_batch_score/ 100.0}"
                     )
                     episode_batch_score = 0
                 else:
@@ -106,7 +108,7 @@ def train(starting_policy=None):
 
     torch.save(
         {"policy": agent.policy_network.state_dict()},
-        f"{working_dir}/policy_network_final.pkl",
+        f"{working_dir}/policy_network_final_s{episode_batch_score//100}.pkl",
     )
 
     plt.plot(episode_history, episode_reward_history)
