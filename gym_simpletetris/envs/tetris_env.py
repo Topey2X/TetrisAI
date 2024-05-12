@@ -160,7 +160,7 @@ class TetrisEngine:
         actions = [left, right, soft_drop, rotate_left, rotate_right, idle]
         self.value_action_map = {}
         for i,action in enumerate(actions):
-            self.value_action_map[action] = i
+            self.value_action_map[i] = action
         # self.value_action_map = {
         #     0: left,
         #     1: right,
@@ -170,7 +170,7 @@ class TetrisEngine:
         #     4: rotate_right,
         #     5: idle,
         # }
-        # self.action_value_map = dict([(j, i) for i, j in self.value_action_map.items()])
+        self.action_value_map = dict([(j, i) for i, j in self.value_action_map.items()])
         self.nb_actions = len(self.value_action_map)
 
         # for running the engine

@@ -8,13 +8,13 @@ import torch.optim as optim
 
 # Hyper parameters that will be used in the DQN algorithm
 
-EPISODES = 4000                 # number of episodes to run the training for
-LEARNING_RATE = 0.00025         # the learning rate for optimising the neural network weights
-MEM_SIZE = 50000                # maximum size of the replay memory - will start overwritting values once this is exceed
-REPLAY_START_SIZE = 10000       # The amount of samples to fill the replay memory with before we start learning
-BATCH_SIZE = 64                 # Number of random samples from the replay memory we use for training each iteration
+EPISODES = 100000                 # number of episodes to run the training for
+LEARNING_RATE = 0.0001         # the learning rate for optimising the neural network weights
+MEM_SIZE = 100000                # maximum size of the replay memory - will start overwritting values once this is exceed
+REPLAY_START_SIZE = 20000       # The amount of samples to fill the replay memory with before we start learning
+BATCH_SIZE = 128                 # Number of random samples from the replay memory we use for training each iteration
 GAMMA = 0.99                    # Discount factor
-EPS_START = 0.1                 # Initial epsilon value for epsilon greedy action sampling
+EPS_START = 0.2                 # Initial epsilon value for epsilon greedy action sampling
 EPS_END = 0.0001                # Final epsilon value
 EPS_DECAY = 4 * MEM_SIZE        # Amount of samples we decay epsilon over
 MEM_RETAIN = 0.1                # Percentage of initial samples in replay memory to keep - for catastrophic forgetting
