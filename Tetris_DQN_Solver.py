@@ -19,7 +19,7 @@ import torch.optim as optim
 
 # Hyper parameters that will be used in the DQN algorithm
 
-EPISODES = 2500                 # number of episodes to run the training for
+EPISODES = 5000                 # number of episodes to run the training for
 LEARNING_RATE = 0.00025         # the learning rate for optimising the neural network weights
 MEM_SIZE = 50000                # maximum size of the replay memory - will start overwritting values once this is exceed
 REPLAY_START_SIZE = 10000       # The amount of samples to fill the replay memory with before we start learning
@@ -31,8 +31,8 @@ EPS_DECAY = 4 * MEM_SIZE        # Amount of samples we decay epsilon over
 MEM_RETAIN = 0.1                # Percentage of initial samples in replay memory to keep - for catastrophic forgetting
 NETWORK_UPDATE_ITERS = 5000     # Number of samples 'C' for slowly updating the target network \hat{Q}'s weights with the policy network Q's weights
 
-FC1_DIMS = 100                  # Number of neurons in our MLP's first hidden layer
-FC2_DIMS = 100                   # Number of neurons in our MLP's second hidden layer
+FC1_DIMS = 500                  # Number of neurons in our MLP's first hidden layer
+FC2_DIMS = 500                   # Number of neurons in our MLP's second hidden layer
 
 # metrics for displaying training status
 best_reward = 0
@@ -125,7 +125,7 @@ class DQN_Solver:
             eps_threshold = 1.0
         # if we rolled a value lower than epsilon, sample a random action
         if random.random() < eps_threshold:
-            return np.random.choice(np.array(range(7)), p=[0.15, 0.15, 0.14, 0.14, 0.14, 0.14, 0.14])    # sample random action with set priors (if we flap too much we will die too much at the start and learning will take forever)
+            return np.random.choice(np.array(range(7)), p=[0.15, 0.15, 0.14, 0.14, 0.21, 0.21, 0])    # sample random action with set priors
 
         # otherwise policy network, Q, chooses action with highest estimated Q-value so far
         state = torch.tensor(observation).float().detach()

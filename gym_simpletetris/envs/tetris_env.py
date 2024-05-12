@@ -283,7 +283,10 @@ class TetrisEngine:
                     self._count_holes()
                     self.n_deaths += 1
                     done = True
-                    reward = -100
+                    if cleared_lines == False:  #
+                        reward = -1000          # Added these 3 lines
+                    else:                       #
+                        reward = -100  
                 else:
                     old_holes = self.holes
                     self._count_holes()
@@ -294,6 +297,8 @@ class TetrisEngine:
                         new_height = sum(np.any(self.board, axis=0))
                         if new_height > self.piece_height:
                             reward -= 10 * (new_height - self.piece_height)
+                        else:               # Added
+                            reward += 100   # Added
                         self.piece_height = new_height
 
                     if self._scoring.get('penalise_holes'):

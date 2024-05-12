@@ -8,19 +8,19 @@ import torch.optim as optim
 
 # Hyper parameters that will be used in the DQN algorithm
 
-EPISODES = 2500                 # number of episodes to run the training for
-LEARNING_RATE = 0.00025         # the learning rate for optimising the neural network weights
+EPISODES = 3500                 # number of episodes to run the training for
+LEARNING_RATE = 0.001 # Previous 0.00025         # the learning rate for optimising the neural network weights
 MEM_SIZE = 50000                # maximum size of the replay memory - will start overwritting values once this is exceed
 REPLAY_START_SIZE = 10000       # The amount of samples to fill the replay memory with before we start learning
-BATCH_SIZE = 32                 # Number of random samples from the replay memory we use for training each iteration
+BATCH_SIZE = 256  #Changes Previous 32 then 128              # Number of random samples from the replay memory we use for training each iteration
 GAMMA = 0.99                    # Discount factor
 EPS_START = 0.1                 # Initial epsilon value for epsilon greedy action sampling
 EPS_END = 0.0001                # Final epsilon value
 EPS_DECAY = 4 * MEM_SIZE        # Amount of samples we decay epsilon over
 MEM_RETAIN = 0.1                # Percentage of initial samples in replay memory to keep - for catastrophic forgetting
-NETWORK_UPDATE_ITERS = 5000     # Number of samples 'C' for slowly updating the target network \hat{Q}'s weights with the policy network Q's weights
+NETWORK_UPDATE_ITERS = 10000 #Previous value 5000     # Number of samples 'C' for slowly updating the target network \hat{Q}'s weights with the policy network Q's weights
 
-FC1_DIMS = 256                   # Number of neurons in our MLP's first hidden layer
+FC1_DIMS = 128                   # Number of neurons in our MLP's first hidden layer
 FC2_DIMS = 256                   # Number of neurons in our MLP's second hidden layer
 # FC3_DIMS = 128                   # Number of neurons in our MLP's third hidden layer
 
@@ -111,10 +111,7 @@ class DQN_Solver:
             eps_threshold = 1.0
 
         if random.random() < eps_threshold:
-            return np.random.choice(np.array(
-                    range(3)),
-                    p=[0.25,0.5,0.25] #force driving, allow steering, ban not moving
-                )
+            return np.random.choice(np.array(range(7)), p=[0.22, 0.22, 0, 0.14, 0.21, 0.21, 0])
 
         state = torch.tensor(observation, device=device).float().detach().unsqueeze(0)
         self.policy_network.eval()

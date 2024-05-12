@@ -1,0 +1,11 @@
+LICENSE.txt
+README.md
+setup.py
+gym_simpletetris/__init__.py
+gym_simpletetris.egg-info/PKG-INFO
+gym_simpletetris.egg-info/SOURCES.txt
+gym_simpletetris.egg-info/dependency_links.txt
+gym_simpletetris.egg-info/requires.txt
+gym_simpletetris.egg-info/top_level.txt
+gym_simpletetris/envs/__init__.py
+gym_simpletetris/envs/tetris_env.py
