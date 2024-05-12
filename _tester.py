@@ -56,5 +56,5 @@ def test_model(model_file):
   
 
 if __name__ == "__main__":
-  model_file = "models\\240511-151936\\policy_network_final.pkl"
+  model_file = "models\\240512-163340\\policy_network_final_s0.pkl"
   test_model(model_file)

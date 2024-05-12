@@ -24,12 +24,13 @@ def train(starting_policy=None):
         extend_dims=False,               # Extend ram or grayscale dimensions
     #    render_mode='human',         # Unused parameter
         reward_step=True,               # See reward table
-        penalise_height=True,           # See reward table
+        penalise_height=False,           # See reward table
         penalise_height_increase=True,  # See reward table
         advanced_clears=False,           # See reward table
         high_scoring=True,              # See reward table
         penalise_holes=False,            # See reward table
         penalise_holes_increase=True,   # See reward table
+        reward_lines=True,               # 
         lock_delay=0,                    # Lock delay as number of steps
         step_reset=False                 # Reset lock delay on step downwards
     )
@@ -96,6 +97,9 @@ def train(starting_policy=None):
                         )
                     print(
                         f"EPISODES {i-report_every+1}-{i+1}: Average total reward per episode batch: {episode_batch_score/ 100.0}"
+                    )
+                    print(
+                        f"\tLATEST REWARD:\n{info['reward_breakdown']}"
                     )
                     episode_batch_score = 0
                 else:
