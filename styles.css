@@ -65,7 +65,7 @@ p {
 .image-container {
     position: relative;
     margin-top: 200px; /* Position image 300px from the top */
-    margin-left: 30%; /* Position image 70% of the way to the left */
+    margin-left: 70%; /* Position image 70% of the way to the left */
     width: 30%; /* Width of the image container */
 }
 
@@ -76,9 +76,9 @@ p {
 
 .caption {
     position: absolute;
-    bottom: 10px; /* Adjust the distance from the bottom */
+    bottom: -10px; /* Adjust the distance from the bottom */
     left: 0;
-    width: 100%;
+    width: 80%;
     text-align: center; /* Center the caption text */
     color: #fff; /* Caption text color */
     background-color: rgba(0, 0, 0, 0.5); /* Caption background color and opacity */
