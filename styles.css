@@ -3,3 +3,12 @@ body {
     background: pink;
     text-align: center;
 }
+
+h1 {
+    text-align: center;
+}
+
+p, ul {
+    text-align: left;
+    margin-left: 20px; /* Optional: Adds some left margin for better readability */
+}
