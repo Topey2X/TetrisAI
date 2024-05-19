@@ -53,8 +53,8 @@ li a:hover {
 
 .tetris-image {
     position: absolute;
-    top: 50px; /* Adjust this value to position vertically */
-    left: 50%; /* This positions the left edge of the image at the center */
+    top: 120px; /* Adjust this value to position vertically */
+    left: 70%; /* This positions the left edge of the image at the center */
     transform: translateX(-50%); /* This centers the image */
     width: 300px;
     height: auto;
