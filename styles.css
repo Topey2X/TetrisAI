@@ -62,22 +62,22 @@ p {
     margin-right: 20px; /* Ensures consistent margin on both sides */
 }
 
+.image-container {
+    position: relative;
+    margin-top: 300px; /* Position image 300px from the top */
+    margin-left: 15%; /* Position image 70% of the way to the left */
+    width: 70%; /* Width of the image container */
+}
+
 .tetris-image {
-    position: absolute;
-    top: 300px; /* Adjust this value to position vertically */
-    left: 70%; /* This positions the left edge of the image at the center */
-    transform: translateX(-50%); /* This centers the image */
-    width: 30%; /* Adjust the width as needed */
+    width: 100%; /* Ensure the image takes up its full container width */
     height: auto; /* Maintain aspect ratio */
 }
 
-.image-container {
-    display: inline-block;
-    position: relative;
-    margin: 20px auto; /* Center the image horizontally with some top margin */
-}
-
 .caption {
+    position: absolute;
+    bottom: 10px; /* Adjust the distance from the bottom */
+    left: 0;
     width: 100%;
     text-align: center; /* Center the caption text */
     color: #fff; /* Caption text color */
