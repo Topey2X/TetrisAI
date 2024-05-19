@@ -75,9 +75,10 @@ p {
 }
 
 .caption {
-    position: center;
+    position: absolute;
     bottom: -30px; /* Adjust the distance from the bottom */
-    left: 0;
+    left: 50%; /* Position the left edge of the caption at the center */
+    transform: translateX(-50%); /* Center the caption horizontally */
     width: 80%;
     text-align: center; /* Center the caption text */
     color: #fff; /* Caption text color */
