@@ -66,7 +66,7 @@ p {
     position: relative;
     margin-top: 300px; /* Position image 300px from the top */
     margin-left: 30%; /* Position image 70% of the way to the left */
-    width: 70%; /* Width of the image container */
+    width: 30%; /* Width of the image container */
 }
 
 .tetris-image {
