@@ -6,9 +6,11 @@ body {
 
 h1 {
     text-align: center;
+
 }
 h2 {
     text-align: left;
+    margin-left: 20px;
 }
 
 p {
@@ -61,5 +63,6 @@ li a:hover {
 .reward-list {
     text-align: left;
     margin-left: 20px;
-    list-style-type: disc;
+    list-style-type: disc; /* Use disc instead of circle for more common bullet points */
+    padding-left: 20px; /* Add some padding to align the bullets nicely */
 }
