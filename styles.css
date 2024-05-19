@@ -56,8 +56,17 @@ p {
 
 .reward-list {
     text-align: left;
-    margin-left: 40px; /* Adds some left margin for better readability */
+    margin-left: 20px; /* Consistent margin with other elements */
     list-style-type: disc;
     padding-left: 20px; /* Ensures bullets are visible */
     margin-right: 20px; /* Ensures consistent margin on both sides */
+}
+
+.tetris-image {
+    position: absolute;
+    top: 120px; /* Adjust this value to position vertically */
+    left: 50%; /* This positions the left edge of the image at the center */
+    transform: translateX(-50%); /* This centers the image */
+    width: 300px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
 }
