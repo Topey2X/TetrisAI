@@ -70,3 +70,20 @@ p {
     width: 30%; /* Adjust the width as needed */
     height: auto; /* Maintain aspect ratio */
 }
+
+.image-container {
+    position: relative;
+    width: 30%; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the image horizontally */
+}
+
+.caption {
+    position: absolute;
+    bottom: 10px; /* Adjust the distance from the bottom */
+    left: 0;
+    width: 100%;
+    text-align: center; /* Center the caption text */
+    color: #fff; /* Caption text color */
+    background-color: rgba(0, 0, 0, 0.5); /* Caption background color and opacity */
+    padding: 5px; /* Adjust padding as needed */
+}
