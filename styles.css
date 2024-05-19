@@ -2,23 +2,27 @@ body {
     margin: 0;
     background: pink;
     text-align: center;
+    font-family: Arial, sans-serif;
 }
 
 h1 {
     text-align: center;
-
+    margin-top: 20px;
 }
+
 h2 {
-    text-align: center;
+    text-align: left;
     margin-left: 20px;
+    margin-right: 20px; /* Ensure consistent margin on both sides */
 }
 
 p {
     text-align: left;
-    margin-left: 20px; /* Optional: Adds some left margin for better readability */
+    margin-left: 20px; /* Adds some left margin for better readability */
+    margin-right: 20px; /* Ensures consistent margin on both sides */
 }
 
-ul {
+.navbar {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -29,12 +33,11 @@ ul {
     width: 100%;
 }
 
-li {
+.navbar li {
     float: left;
-    display: inline;
 }
 
-li a {
+.navbar li a {
     display: block;
     color: white;
     text-align: center;
@@ -43,7 +46,7 @@ li a {
 }
 
 /* Change the link color to #111 (black) on hover */
-li a:hover {
+.navbar li a:hover {
     background-color: #111;
 }
 
@@ -51,18 +54,10 @@ li a:hover {
     background-color: #04AA6D;
 }
 
-.tetris-image {
-    position: absolute;
-    top: 120px; /* Adjust this value to position vertically */
-    left: 70%; /* This positions the left edge of the image at the center */
-    transform: translateX(-70%); /* This centers the image */
-    width: 300px;
-    height: auto;
-}
-
 .reward-list {
     text-align: left;
-    margin-left: 20px;
-    list-style-type: disc; /* Use disc instead of circle for more common bullet points */
-    padding-left: 20px; /* Add some padding to align the bullets nicely */
+    margin-left: 40px; /* Adds some left margin for better readability */
+    list-style-type: disc;
+    padding-left: 20px; /* Ensures bullets are visible */
+    margin-right: 20px; /* Ensures consistent margin on both sides */
 }
