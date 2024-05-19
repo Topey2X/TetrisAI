@@ -13,13 +13,13 @@
         <li><a href="/TetrisAI/progress.html">Progress</a></li>
         <li><a href="/TetrisAI/issues.html">Current Issues</a></li>
     </ul>
-    <p>To encourage the model to clear lines effectively, the following rewards were chosen:</p> <br/>
-    
-        <p>- Reward Step = +1 for every step that does not end the game.</p>  <br>
-        <p>- Penalise Height = Negative reward equivalent to tower height once block is placed.</p> <br>
-        <p>- Penalise Height Increase = Negative reward equivalent to height increase.</p> <br>
-        <p>- Advanced Clears = 100 for a single line clear, 250 for double line clear, 750 for a triple line clear, and 3000 for a tetris.</p> <br>
-        <p>- High Scoring = Overwrites advanced clears and gives 1000 reward per line clear.</p> <br>
-
+    <p>To encourage the model to clear lines effectively, the following rewards were chosen:</p>
+    <ul class="reward-list">
+        <li>Reward Step = +1 for every step that does not end the game.</li>
+        <li>Penalise Height = Negative reward equivalent to tower height once block is placed.</li>
+        <li>Penalise Height Increase = Negative reward equivalent to height increase.</li>
+        <li>Advanced Clears = 100 for a single line clear, 250 for double line clear, 750 for a triple line clear, and 3000 for a tetris.</li>
+        <li>High Scoring = Overwrites advanced clears and gives 1000 reward per line clear.</li>
+    </ul>
 </body>
 </html>
