@@ -9,7 +9,7 @@ h1 {
 
 }
 h2 {
-    text-align: left;
+    text-align: center;
     margin-left: 20px;
 }
 
@@ -54,8 +54,8 @@ li a:hover {
 .tetris-image {
     position: absolute;
     top: 120px; /* Adjust this value to position vertically */
-    left: 50%; /* This positions the left edge of the image at the center */
-    transform: translateX(-50%); /* This centers the image */
+    left: 70%; /* This positions the left edge of the image at the center */
+    transform: translateX(-70%); /* This centers the image */
     width: 300px;
     height: auto;
 }
