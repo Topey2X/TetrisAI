@@ -12,3 +12,9 @@ p, ul {
     text-align: left;
     margin-left: 20px; /* Optional: Adds some left margin for better readability */
 }
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
