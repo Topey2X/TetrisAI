@@ -65,7 +65,7 @@ p {
 .image-container {
     position: relative;
     margin-top: 200px; /* Position image 300px from the top */
-    margin-left: 70%; /* Position image 70% of the way to the left */
+    margin-left: 60%; /* Position image 70% of the way to the left */
     width: 30%; /* Width of the image container */
 }
 
