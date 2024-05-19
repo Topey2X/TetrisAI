@@ -64,8 +64,8 @@ p {
 
 .tetris-image {
     position: absolute;
-    top: 120px; /* Adjust this value to position vertically */
-    left: 50%; /* This positions the left edge of the image at the center */
+    top: 300px; /* Adjust this value to position vertically */
+    left: 70%; /* This positions the left edge of the image at the center */
     transform: translateX(-50%); /* This centers the image */
     width: 300px; /* Adjust the width as needed */
     height: auto; /* Maintain aspect ratio */
