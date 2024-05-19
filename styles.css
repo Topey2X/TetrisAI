@@ -8,7 +8,7 @@ h1 {
     text-align: center;
 }
 
-p, ul {
+p {
     text-align: left;
     margin-left: 20px; /* Optional: Adds some left margin for better readability */
 }
