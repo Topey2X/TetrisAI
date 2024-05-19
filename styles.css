@@ -72,15 +72,12 @@ p {
 }
 
 .image-container {
+    display: inline-block;
     position: relative;
-    width: 30%; /* Adjust the width as needed */
-    margin: 0 auto; /* Center the image horizontally */
+    margin: 20px auto; /* Center the image horizontally with some top margin */
 }
 
 .caption {
-    position: absolute;
-    bottom: 10px; /* Adjust the distance from the bottom */
-    left: 0;
     width: 100%;
     text-align: center; /* Center the caption text */
     color: #fff; /* Caption text color */
