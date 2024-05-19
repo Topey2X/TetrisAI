@@ -62,7 +62,7 @@ class Network(torch.nn.Module):
             )
 
         self.optimizer = optim.Adam(self.parameters(), lr=LEARNING_RATE)
-        self.loss = nn.MSELoss()  # loss function
+self.loss = nn.MSELoss()  # loss function
 
     def forward(self, x):
         return self.layers(x)
@@ -187,4 +187,4 @@ class DQN_Solver:
         self.target_network.load_state_dict(self.policy_network.state_dict())
 
     def returning_epsilon(self):
-        return self.exploration_rate
+        return self.exploration_rate)
