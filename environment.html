@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Tetris Environment</h1>
+    <ul class="navbar">
+        <li><a href="/TetrisAI">Home</a></li>
+        <li><a class="active" href="/TetrisAI/environment.html">Environment Space</a></li>
+        <li><a href="/TetrisAI/rewards.html">Rewards</a></li>
+        <li><a href="/TetrisAI/progress.html">Progress</a></li>
+        <li><a href="/TetrisAI/issues.html">Current Issues</a></li>
+        <li><a href="/TetrisAI/future.html">Future Work</a></li>
+    </ul>
+    <h2>Action Space</h2>
+    <ul class="reward-list">
+        <li>Move
+            <ul>
+                <li>[0] Left</li>
+                <li>[1] Right</li>
+                <li>[2] Hard Drop (all the way down)</li>
+                <li>[3] Soft Drop (one step)</li>
+            </ul>
+        </li>
+        <li>Rotate
+            <ul>
+                <li>[4] Left</li>
+                <li>[5] Right</li>
+            </ul>
+        </li>
+        <li>Other
+            <ul>
+                <li>[6] Idle</li>
+            </ul>
+        </li>
+    </ul>
+    <h2>Observation Space</h2>
+    <ul class="reward-list">
+        <li>Board Info
+            <ul>
+                <li>Width * Height (flattened)
+                    <ul>
+                        <li>[0-199] = 10x20</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>Piece Info
+            <ul>
+                <li>[200] Block Type</li>
+                <li>[201] Rotation</li>
+                <li>[202-203] Origin Location (x,y)</li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>
