@@ -102,6 +102,12 @@ p {
     margin-top: 0;
 }
 
+.infobox-image {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+
 footer {
     position: fixed;
     bottom: 0;
