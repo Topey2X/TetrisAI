@@ -3,6 +3,9 @@ body {
     background: pink;
     text-align: center;
     font-family: Arial, sans-serif;
+    padding: 0;
+    padding-bottom: 60px; /* Ensure there's space for the footer */
+    box-sizing: border-box;
 }
 
 h1 {
@@ -132,4 +135,5 @@ footer {
     color: white;
     text-align: center;
     padding: 10px 0;
+    z-index: 10;
 }
