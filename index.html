@@ -16,13 +16,30 @@
         <li><a href="/TetrisAI/future.html">Future Work</a></li>
     </ul>
     <p>The Tetris Master 3000 uses DQN and Reinforcement learning to play tetris (unfortunatly not better than a human. Yet...)</p>
+    <h2>What is Tetris</h2>
+    <p>Tetris is a classic tile matching video game created in 1984 where geometric shapes composed of four square blocks known as tetriminos fall from the top of the playing field of which there are 7 different types. Players must rotate and move these blocks to complete a line. When a line is complete it disappears and any blocks above get shifted down. The game ends when the stack of tetriminos reaches the top of the playing field. Essentially more lines you clear the bigger your score. </p>
+    <p>Our model will look to reward good moves and penalise bad ones</p>
+    <h2>What are good and bad moves</h2>
+    <p>Good moves include completing lines specifically more than one at a time and minimising the risk of creating a hole. On the other hand bad moves are ones that create gaps and not rotating for optimal block placement.</p>
+    
+    <div class="move-images">
+        <div class="move">
+            <h3>Good Move</h3>
+            <img src="/TetrisAI/images/good_move.png" alt="Good Move" class="move-image">
+        </div>
+        <div class="move">
+            <h3>Bad Move</h3>
+            <img src="/TetrisAI/images/bad_move.png" alt="Bad Move" class="move-image">
+        </div>
+    </div>
+    
     <div class="image-container">
         <img src="/TetrisAI/images/ai_tetris.png" alt="Tetris AI" class="tetris-image">
         <div class="caption">Our AI Playing Tetris</div>
     </div>
     <div class="infobox">
         <h2>AI Tetris</h2>
-        <p>This is some text inside the infobox. It contains information about the Tetris AI project.</p>
+        <p>The Tetris Master 3000 depicted in a human form playing a version of Tetris where lines do not clear.</p>
         <img src="/TetrisAI/images/ai_tetris.png" alt="Tetris AI" class="infobox-image">
     </div>
     <footer>

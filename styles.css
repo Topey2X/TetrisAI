@@ -108,6 +108,21 @@ p {
     margin-top: 10px;
 }
 
+.move-images {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.move {
+    text-align: center;
+}
+
+.move-image {
+    width: 200px;
+    height: auto;
+}
+
 footer {
     position: fixed;
     bottom: 0;
