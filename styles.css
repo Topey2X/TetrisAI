@@ -20,6 +20,7 @@ p {
     text-align: left;
     margin-left: 20px; /* Adds some left margin for better readability */
     margin-right: 20px; /* Ensures consistent margin on both sides */
+    width: 70%;
 }
 
 .navbar {
