@@ -58,6 +58,9 @@ p {
     background-color: #04AA6D;
 }
 
+.navbar .about-link {
+    float: right;
+}
 .reward-list {
     text-align: left;
     margin-left: 20px; /* Consistent margin with other elements */
