@@ -131,6 +131,27 @@ p {
     height: auto;
 }
 
+.video-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.video-container {
+    width: 45%; /* Adjust the width as needed */
+}
+
+video {
+    width: 100%;
+    height: auto;
+}
+
+.video-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
 footer {
     position: fixed;
     bottom: 0;
