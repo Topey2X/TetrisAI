@@ -56,5 +56,9 @@ def test_model(model_file):
   
 
 if __name__ == "__main__":
+<<<<<<< HEAD
   model_file = "models/240512-201003/policy_network21.pkl"
+=======
+  model_file = "models\\240512-174516\\policy_network_final_s0.pkl"
+>>>>>>> 6225526b47feebfae94df5052c73837a389c2ff4
   test_model(model_file)

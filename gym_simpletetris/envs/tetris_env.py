@@ -1,7 +1,7 @@
 import numpy as np
 import random
-import gym
-from gym import spaces
+import tetris_gym
+from tetris_gym import spaces
 import pygame
 
 # Adapted from the Tetris engine in the TetrisRL project by jaybutera
@@ -139,7 +139,9 @@ class TetrisEngine:
                  advanced_clears=False,
                  high_scoring=False,
                  penalise_holes=False,
-                 penalise_holes_increase=False):
+                 penalise_holes_increase=False,
+                 reward_lines=False
+                 ):
         self.width = width
         self.height = height
         self.board = np.zeros(shape=(width, height), dtype=float)
@@ -150,19 +152,24 @@ class TetrisEngine:
             'advanced_clears': advanced_clears,
             'high_scoring': high_scoring,
             'penalise_holes': penalise_holes,
-            'penalise_holes_increase': penalise_holes_increase
+            'penalise_holes_increase': penalise_holes_increase,
+            'reward_lines': reward_lines
         }
 
         # actions are triggered by letters
-        self.value_action_map = {
-            0: left,
-            1: right,
-            2: hard_drop,
-            3: soft_drop,
-            4: rotate_left,
-            5: rotate_right,
-            6: idle,
-        }
+        actions = [left, right, soft_drop, rotate_left, rotate_right, idle]
+        self.value_action_map = {}
+        for i,action in enumerate(actions):
+            self.value_action_map[i] = action
+        # self.value_action_map = {
+        #     0: left,
+        #     1: right,
+        #     # 2: hard_drop,
+        #     2: soft_drop,
+        #     3: rotate_left,
+        #     4: rotate_right,
+        #     5: idle,
+        # }
         self.action_value_map = dict([(j, i) for i, j in self.value_action_map.items()])
         self.nb_actions = len(self.value_action_map)
 
@@ -176,6 +183,7 @@ class TetrisEngine:
         self.shape = None
         self.shape_name = None
         self.n_deaths = 0
+        self.reward_breakdown = {}
 
         self._lock_delay_fn = lambda x: (x + 1) % (max(lock_delay, 0) + 1)
         self._lock_delay = 0
@@ -242,76 +250,161 @@ class TetrisEngine:
             'lines_cleared': self.lines_cleared,
             'holes': self.holes,
             'deaths': self.n_deaths,
-            'statistics': self.shape_counts
+            'statistics': self.shape_counts,
+            'reward_breakdown': self.reward_breakdown
         }
 
     def step(self, action):
+        # Convert the anchor to integer coordinates
         self.anchor = (int(self.anchor[0]), int(self.anchor[1]))
+        
+        # Update the shape and anchor based on the action
         self.shape, self.anchor = self.value_action_map[action](self.shape, self.anchor, self.board)
-        # Drop each step
+        
+        # Perform a soft drop of the current shape
         self.shape, new_anchor = soft_drop(self.shape, self.anchor, self.board)
+        
+        # Reset lock delay if necessary
         if self._step_reset and (self.anchor != new_anchor):
             self._lock_delay = 0
         self.anchor = new_anchor
 
-        # Update time and reward
+        # Increment time
         self.time += 1
-        # reward = self.valid_action_count()
-        # reward = random.randint(0, 0)
+        
+        # Initialize reward
         reward = 1 if self._scoring.get('reward_step') else 0
 
+        # Flag to determine if the game is over
         done = False
+        
+        # Check if the shape has dropped completely
         if self._has_dropped():
+            # Update lock delay
             self._lock_delay = self._lock_delay_fn(self._lock_delay)
 
+            # Place the piece if the delay is over
             if self._lock_delay == 0:
+                # Record the state of the board before placing the new piece for reward calculation
+                old_board = np.copy(self.board)
+
+                # Set the piece permanently on the board
                 self._set_piece(True)
+                
+                # Clear lines and calculate rewards based on cleared lines
                 cleared_lines = self._clear_lines()
 
                 if self._scoring.get('advanced_clears'):
                     scores = [0, 40, 100, 300, 1200]
-                    reward += 2.5 * scores[cleared_lines]
+                    this_reward = 2.5 * scores[cleared_lines]
                     self.score += scores[cleared_lines]
+                    self.reward_breakdown['advanced_clears'] = this_reward
+                    reward += this_reward
                 elif self._scoring.get('high_scoring'):
-                    reward += 1000 * cleared_lines
+                    this_reward = 1000 * cleared_lines
                     self.score += cleared_lines
+                    self.reward_breakdown['clears'] = this_reward
+                    reward += this_reward
                 else:
-                    reward += 100 * cleared_lines
+                    this_reward = 100 * cleared_lines
                     self.score += cleared_lines
+                    self.reward_breakdown['clears'] = this_reward
+                    reward += this_reward
 
+                # Game over condition if any blocks are in the first row
                 if np.any(self.board[:, 0]):
                     self._count_holes()
                     self.n_deaths += 1
                     done = True
+<<<<<<< HEAD
                     if cleared_lines == False:  #
                         reward = -1000          # Added these 3 lines
                     else:                       #
                         reward = -100  
+=======
+                    this_reward = -100
+                    self.reward_breakdown['game_ended'] = this_reward
+                    reward += this_reward
+>>>>>>> 6225526b47feebfae94df5052c73837a389c2ff4
                 else:
+                    # Record holes before new piece for reward adjustment
                     old_holes = self.holes
                     self._count_holes()
 
+                    # Penalize for increased height
                     if self._scoring.get('penalise_height'):
-                        reward -= sum(np.any(self.board, axis=0))
+                        this_reward = -sum(np.any(self.board, axis=0))
+                        self.reward_breakdown['penalise_height'] = this_reward
+                        reward += this_reward
                     elif self._scoring.get('penalise_height_increase'):
                         new_height = sum(np.any(self.board, axis=0))
+                        this_reward = 0
                         if new_height > self.piece_height:
+<<<<<<< HEAD
                             reward -= 10 * (new_height - self.piece_height)
                         else:               # Added
                             reward += 100   # Added
+=======
+                            this_reward -= 10 * (new_height - self.piece_height)
+>>>>>>> 6225526b47feebfae94df5052c73837a389c2ff4
                         self.piece_height = new_height
+                        self.reward_breakdown['penalise_height_increase'] = this_reward
+                        reward += this_reward
 
+                    # Penalize for holes
                     if self._scoring.get('penalise_holes'):
-                        reward -= 5 * self.holes
+                        this_reward = -5 * self.holes
+                        self.reward_breakdown['penalise_holes'] = this_reward
+                        reward += this_reward
                     elif self._scoring.get('penalise_holes_increase'):
-                        reward -= 5 * (self.holes - old_holes)
+                        this_reward = -5 * (self.holes - old_holes)
+                        self.reward_breakdown['penalise_holes_increase'] = this_reward
+                        reward += this_reward
 
+                    # Add a new piece to the game
                     self._new_piece()
 
+            # Calculate the additional reward based on the new reward system
+            new_blocks = np.copy(self.board) - old_board
+            reward += self.calculate_custom_reward(new_blocks)
+
+        # Set the current piece for visualization without fixing it
         self._set_piece(True)
         state = np.copy(self.board)
         self._set_piece(False)
+
         return state, reward, done
+
+    def calculate_custom_reward(self, new_blocks):
+        reward = 0
+        
+        # Custom Reward 1: Encourage shapes
+        if self._scoring.get('reward_lines'):    
+            width = self.board.shape[0]  # Width of the board (number of columns)
+    
+            # Define the reward mapping for each possible number of blocks in a line
+            rewards = [0] * (width + 1)
+            for i in range(1, width + 1):
+                # Calculate semi-exponential reward
+                rewards[i] = rewards[i-1] + 2 ** (i // 2) - 1
+            
+            # Scale the rewards so that filling an entire line gives 10 points
+            max_possible_reward = rewards[width]
+            rewards = [r / max_possible_reward * 10 for r in rewards]
+            
+            for y in range(self.board.shape[1]):
+                line = self.board[:, y]
+                num_existing_blocks = np.count_nonzero(line)
+                num_added_blocks = np.count_nonzero(new_blocks[:, y])
+                
+                # Compute the reward for the number of blocks after adding new ones
+                total_blocks = num_existing_blocks + num_added_blocks
+                if total_blocks <= width:  # Ensure we don't go beyond the line's capacity
+                    reward += rewards[total_blocks]
+            
+            self.reward_breakdown['reward_lines'] = reward
+                
+        return reward
 
     def clear(self):
         self.time = 0
@@ -344,7 +437,7 @@ class TetrisEngine:
         self._set_piece(False)
         return s
         
-class TetrisEnv(gym.Env):
+class TetrisEnv(tetris_gym.Env):
     metadata = {'render.modes': ['human', 'rgb_array'], "render_fps": 8}
 
     def __init__(self,
@@ -360,6 +453,7 @@ class TetrisEnv(gym.Env):
                  high_scoring=False,
                  penalise_holes=False,
                  penalise_holes_increase=False,
+                 reward_lines=False,
                  lock_delay=0,
                  step_reset=False):
         self.width = width
@@ -379,9 +473,10 @@ class TetrisEnv(gym.Env):
                                    advanced_clears,
                                    high_scoring,
                                    penalise_holes,
-                                   penalise_holes_increase)
+                                   penalise_holes_increase,
+                                   reward_lines)
 
-        self.action_space = spaces.Discrete(7)
+        self.action_space = spaces.Discrete(len(self.engine.action_value_map))
         self.window = None
         self.clock = None
 
