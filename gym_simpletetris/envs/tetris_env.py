@@ -1,7 +1,7 @@
 import numpy as np
 import random
-import gym
-from gym import spaces
+import tetris_gym
+from tetris_gym import spaces
 import pygame
 
 # Adapted from the Tetris engine in the TetrisRL project by jaybutera
@@ -424,7 +424,7 @@ class TetrisEngine:
         self._set_piece(False)
         return s
         
-class TetrisEnv(gym.Env):
+class TetrisEnv(tetris_gym.Env):
     metadata = {'render.modes': ['human', 'rgb_array'], "render_fps": 8}
 
     def __init__(self,
