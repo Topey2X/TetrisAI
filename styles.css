@@ -160,6 +160,18 @@ video {
     margin-bottom: 10px;
 }
 
+.teaser-video,
+.final-video {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* Add some space between the video sections */
+}
+
+.teaser-video video,
+.final-video video {
+    width: 40%;
+}
+
 footer {
     position: fixed;
     bottom: 0;
