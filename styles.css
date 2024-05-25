@@ -151,7 +151,7 @@ p {
 
 .iframe-wrapper {
     position: relative;
-    padding-bottom: 125%; /* 4:5 aspect ratio */
+    padding-bottom: 200%; /* 4:5 aspect ratio */
     height: 0;
     overflow: hidden;
     max-width: 100%;
