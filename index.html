@@ -60,6 +60,12 @@
     <p>Our AI, the tetris master 3000 uses DQN and reinforcment learning to train our model and play the game. Below you can see our AI Training on the left side and playing on the right.</p>
     <p>Our objective is for a given state, calculate the expected final reward. The game is run by providing the AI with all possible final states for the next block, and then the best state is chosen by the AI.</p>
     <p>More infromation regarding the AI is available on other pages such as the environment page.</p>
+    <p>The benefits of using a model like us where we calculate the best expected final reward compared to that which tries to calculate the best move (rotating, move, drop) for the current board state is:</p>
+    <ul class="reward-list"> 
+        <li>The AI can 'plan' for better scores such as aiming for a tetris.</li>
+        <li>The AI does not need to know which new block has been added, as the observation is of the final state.</li>
+        <li>The Input space can be metadata about the game board, instead of the actual game board, allowing for (1) smaller input space, and (2) more nuanced control over what the AI is optimising for.</li>
+    </ul>
     <div class="video-section">
         <div class="video-container">
             <h3 class="video-title">Our AI Training</h3>
