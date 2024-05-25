@@ -11,7 +11,7 @@ import os
 # Run DQN with Tetris
 def dqn():
     env = Tetris()
-    episodes = 2000
+    episodes = 3500
     max_steps = None
     epsilon_stop_episode = 1500
     mem_size = 20000
@@ -27,6 +27,7 @@ def dqn():
     render_delay = None
     activations = ['relu', 'relu', 'linear']
 
+
     agent = DQNAgent(env.get_state_size(),
                      n_neurons=n_neurons, activations=activations,
                      epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
@@ -35,8 +36,14 @@ def dqn():
     # log_dir = f'logs/tetris-nn={str(n_neurons)}-mem={mem_size}-bs={batch_size}-e={epochs}-{datetime.now().strftime("%Y%m%d-%H%M%S")}'
 
     scores = []
+    clearedLines = []
+
+    #rendering = False
 
     for episode in tqdm(range(episodes), desc="Training", unit="episodes"):
+        #if episode == 3000:
+        #    rendering = True
+
         current_state = env.reset()
         done = False
         steps = 0
@@ -57,13 +64,14 @@ def dqn():
                     best_action = action
                     break
 
-            reward, done = env.play(best_action[0], best_action[1], render=render,
+            reward, done = env.play(best_action[0], best_action[1], render=False,
                                     render_delay=render_delay)
             
             agent.add_to_memory(current_state, next_states[best_action], reward, done)
             current_state = next_states[best_action]
             steps += 1
         scores.append(env.get_game_score())
+        clearedLines.append(env.get_lines_cleared)
 
         # Train
         if episode % train_every == 0:
