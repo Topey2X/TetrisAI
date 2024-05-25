@@ -20,52 +20,20 @@
         <li><a href="/TetrisAI/future.html">Future Work</a></li>
         <li class="about-link"><a href="/TetrisAI/about.html">About</a></li>
     </ul>
-    <h2>Action Space</h2>
-    <ul class="reward-list">
-        <li>Move
-            <ul>
-                <li>[0] Left</li>
-                <li>[1] Right</li>
-                <li>[2] Hard Drop (all the way down)</li>
-                <li>[3] Soft Drop (one step)</li>
-            </ul>
-        </li>
-        <li>Rotate
-            <ul>
-                <li>[4] Left</li>
-                <li>[5] Right</li>
-            </ul>
-        </li>
-        <li>Other
-            <ul>
-                <li>[6] Idle</li>
-            </ul>
-        </li>
+    <p>Our environment is being directly interacted with and rendered using openCV and Pillow as opposed to running through GYM and rendered through pygame like previous versions of our code. Additionally we are using CUDA on the Nvidia GPU.</p>
+    <p>As mentioned on the home page our Hyperparameters are as follows</p>
+    <ul class="reward-list"> 
+        <li>512 Batch Size.</li>
+        <li>Input space of 4.</li>
+        <li>Internal Neurons of 32, 32. </li>
+        <li>Output space of 1.</li>
     </ul>
-    <h2>Observation Space</h2>
-    <ul class="reward-list">
-        <li>Board Info
-            <ul>
-                <li>Width * Height (flattened)
-                    <ul>
-                        <li>[0-199] = 10x20</li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li>Piece Info
-            <ul>
-                <li>[200] Block Type</li>
-                <li>[201] Rotation</li>
-                <li>[202-203] Origin Location (x,y)</li>
-            </ul>
-        </li>
-    </ul>
+<!--
     <figure>
         <img src="/TetrisAI/images/tetris_board.jpg" alt="Tetris Board">
-        <!-- <figcaption>Tetris Board</figcaption> -->
+         <figcaption>Tetris Board</figcaption> 
     </figure>
-
+-->
 
     <footer>
         <p>&copy; 2024 AI Tetris Project. All rights reserved.</p>
