@@ -16,10 +16,21 @@
         <li><a href="/TetrisAI/future.html">Future Work</a></li>
         <li class="about-link"><a href="/TetrisAI/about.html">About</a></li>
     </ul>
-    <h2>Line Clearing</h2>
-    <p style="width: 80%;">Our Tetris AI is not perfect at all. There are many known issues. The largest of these being the AI's ability to clear lines and learn when running the training. It may clear a line everynow and again however even with a reward it is not learning what is causing this and is there for not able to replicate it</p>
-    <p></p>
-    <h2>Placeholder</h2>
+    <h2>Overfitting</h2>
+    <p style="width: 80%;">Our current largest issue is the fact that our AI loves going for tetris' more than surviving. This can and will be tweaked in regards to the rewards. This issue can be seen in the below image where it ends the game rather than placing previous pieces and the line piece to continue.</p>
+    <figure>
+        <img src="/TetrisAI/images/tetris_overfitting.png" alt="Overfitting">
+        <!-- <figcaption>Tetris Board</figcaption> -->
+    </figure>
+
+    <h2>Leaving holes</h2>
+    <p>Our AI still leaves occasional holes when playing however this may just be the optimum move.</p>
+
+    <h2>Skill Shots</h2>
+    <p>Our AI does not have the ability to do skill shots such as rotating a piece into place or sliding a piece under another piece which limits its ability in many cases and would probably lead to some of the leaving holes issues.</p>
+
+    <h2>Training Time</h2>
+    <p>A good problem to have is our training is taking longer and longer as we get a better model and games last longer the training time is greatly increased.</p>
 
     <footer>
         <p>&copy; 2024 AI Tetris Project. All rights reserved.</p>
