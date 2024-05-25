@@ -143,20 +143,12 @@ p {
     justify-content: space-around;
     align-items: center;
     margin-top: 50px;
-  }
-  .video-container {
-    width: 300px; /* Set the desired width */
-    height: 200px; /* Set the desired height */
-    overflow: hidden;
-    position: relative;
-  }
-  .video-container iframe {
-    position: absolute;
-    top: -50px; /* Adjust this value to crop from the top */
-    left: -50px; /* Adjust this value to crop from the left */
-    width: 500px; /* Width of the iframe */
-    height: 720px; /* Height of the iframe */
 }
+
+.video-container {
+    width: 90%; /* Width for YouTube embedded link */
+}
+
 
 video {
     width: 100%;
