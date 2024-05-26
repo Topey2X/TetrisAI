@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>System Rewards</h1>
+    <ul class="navbar">
+        <li><a href="/TetrisAI">Home</a></li>
+        <li><a href="/TetrisAI/environment.html">Environment Space</a></li>
+        <li><a class="active" href="/TetrisAI/rewards.html">Rewards</a></li>
+        <li><a href="/TetrisAI/issues.html">Current Issues</a></li>
+        <li><a href="/TetrisAI/future.html">Future Work</a></li>
+        <li class="about-link"><a href="/TetrisAI/about.html">About</a></li>
+    </ul>
+    <p>To encourage the model to clear lines effectively, the following rewards were chosen:</p>
+
+    <ul class="reward-list">
+        <li>+1 for each step </li>
+        <li>Lines Cleared ^2
+            <ul>
+                <li>E.g 1 line cleared this step = 1 </li>
+                <li>E.g 4 lines cleared this step = 16 </li>
+            </ul>
+        </li>
+        <li>-2 for game end </li>
+    </ul>
+
+    <footer>
+        <p>&copy; 2024 AI Tetris Project. All rights reserved.</p>
+    </footer>
+</body>
+</html>
