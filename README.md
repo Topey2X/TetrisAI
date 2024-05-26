@@ -40,6 +40,8 @@ The observation space contains observations about the game board *after* a piece
 
 ### Network Architecture
 
+4 → 32 → 32 → 1
+
 ![Nueral Network Architecture](images/nn.svg)
 
 ### Batch Size
