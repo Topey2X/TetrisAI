@@ -10,7 +10,7 @@ class Tetris:
     MAP_BLOCK = 1
     BOARD_WIDTH = 10
     BOARD_HEIGHT = 20
-    RENDER_SCALE = 54
+    RENDER_SCALE = 30
 
     TETROMINOS = {
         0: {
