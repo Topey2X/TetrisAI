@@ -8,6 +8,8 @@ A Deep Q-Network AI model trained to play Tetris. *Unofficially dubbed the Tetri
 
 This repository is a fork of tristanrussell's [gym-simpletetris](https://github.com/tristanrussell/gym-simpletetris) environment.
 
+https://topey2x.github.io/TetrisAI/
+
 ## Installation
 TBD
 

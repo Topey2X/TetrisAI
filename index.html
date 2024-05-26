@@ -1,0 +1,124 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        figure {
+            text-align: left; /* Aligns the figure to the left */
+        }
+        
+        figure img {
+            width: 50%; /* Adjusts the width of the image to 50% */
+        }
+    </style>
+</head>
+<body>
+    <h1> AI Tetris</h1>
+    <ul class="navbar">
+
+        <li><a class="active" href="/TetrisAI">Home</a></li>
+        <li><a href="/TetrisAI/environment.html">Environment Space</a></li>
+        <li><a href="/TetrisAI/rewards.html">Rewards</a></li>
+        <li><a href="/TetrisAI/issues.html">Current Issues</a></li>
+        <li><a href="/TetrisAI/future.html">Future Work</a></li>
+        <li class="about-link"><a href="/TetrisAI/about.html">About</a></li>
+    </ul>
+    
+    <h2>What is Tetris</h2>
+    <p>Tetris is a classic tile matching video game created in 1984 where geometric shapes composed of four square blocks known as tetriminos fall from the top of the playing field of which there are 7 different types. Players must rotate and move these blocks to complete a line. When a line is complete it disappears and any blocks above get shifted down. The game ends when the stack of tetriminos reaches the top of the playing field. Essentially more lines you clear the bigger your score. </p>
+    <p>Our model will look to reward good moves and penalise bad ones.</p>
+    
+    <h2>What are good and bad moves</h2>
+    <p>Good moves include completing lines specifically more than one at a time, minimising the risk of creating a hole. </p>
+    <p>A good move that would be considered advanced specifically for an AI would be setting up the ability to clear multiple lines such as leaving a gap for a line piece so as to complete a tetris, when you clear four lines at once, this also rewards you with the most amount of points.</p>
+    <p>On the other hand bad moves are ones that create gaps and not rotating for optimal block placement.</p>
+
+
+    <div class="move-images">
+        <div class="move">
+            <h3>Good Move</h3>
+            <div class="good-move-gif">
+                <div class="tenor-gif-embed" data-postid="17293200" data-share-method="host" data-aspect-ratio="1.1985" data-width="100%">
+                    <a href="https://tenor.com/view/tetris-gaming-video-game-bricks-gif-17293200">Tetris Gaming GIF</a> from <a href="https://tenor.com/search/tetris-gifs">Tetris GIFs</a>
+                </div>
+                <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+            </div>
+        </div>
+        <div class="move">
+            <h3>Bad Move</h3>
+            <img src="/TetrisAI/images/bad_move.jpg" alt="Bad Move" class="move-image">
+        </div>
+    </div>
+    <h2>The Tetriminos</h2>
+    <p>There are 7 tetriminos in tetris. Each denoted by the letter they most resemble. These are [I,J,L,O,S,T,Z].</p>
+    <figure>
+        <img src="/TetrisAI/images/tetrominos.png" alt="Tetrominos">
+    </figure>
+    <h2>Our AI</h2>
+    <p>Our AI, the tetris master 3000 uses DQN and reinforcment learning to train our model and play the game. Below you can see our AI Training on the left side and playing on the right.</p>
+    <p>Our objective is for a given state, calculate the expected final reward. The game is run by providing the AI with all possible final states for the next block, and then the best state is chosen by the AI.</p>
+    <p>The benefits of using a model like us where we calculate the best expected final reward compared to that which tries to calculate the best move (rotating, move, drop) for the current board state is:</p>
+    <ul class="reward-list"> 
+        <li>The AI can 'plan' for better scores such as aiming for a tetris.</li>
+        <li>The AI does not need to know which new block has been added, as the observation is of the final state.</li>
+        <li>The Input space can be metadata about the game board, instead of the actual game board, allowing for (1) smaller input space, and (2) more nuanced control over what the AI is optimising for.</li>
+    </ul>
+    <div class="video-section">
+        <div class="video-container">
+            <h3 class="video-title">Our AI Starting Training</h3>
+            <iframe width="365" height="720" src="https://www.youtube.com/embed/kPhMyQplAgg?si=6n5UwAMM3OMQXabR&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+            <!-- 
+            <video controls autoplay loop muted>
+                <source src="/TetrisAI/videos/tetris_demo_placeholder.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+                -->
+        </div>
+        <div class="video-container">
+            <h3 class="video-title">Our AI Finising Training</h3>
+            <iframe width="365" height="720" src="https://www.youtube.com/embed/Y1_JK11_yLk?si=qw7WpRmULB-NYYuo&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                       <!-- 
+            <video controls autoplay loop muted>
+                <source src="/TetrisAI/videos/tetris_demo_placeholder.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+                -->
+        </div>
+        <div class="video-container">
+            <h3 class="video-title">Our AI Playing</h3>
+            <iframe width="365" height="720" src="https://www.youtube.com/embed/UcMcGdYxtHc?si=UDBCfh4-Q71LXU-a&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                        <!-- 
+            <video controls autoplay loop muted>
+                <source src="/TetrisAI/videos/tetris_demo_placeholder.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>                
+            -->
+        </div>
+    </div>
+   
+    <h2>Playing on different sized tetris boards</h2>
+    <p>A benefit of our AI being provided all possible moves and getting it to select the best one is we are able to change the size of the tetris game and using the same trained data get insanly high scores still. The video below shows our AI playing on a 30 x 20 tetris board however it is using the same training as the video above where it was trained on a 10 x 20 board. </p>
+    <h3>Tetris on a 30x20 board</h3>
+    <iframe width="500" height="720" src="https://www.youtube.com/embed/cARrjwLb2kA?autoplay=1&mute=1&si=NP3EOtv0bSb3dkMB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<!-- 
+    <div class="image-container">
+        <img src="/TetrisAI/images/ai_tetris.png" alt="Tetris AI" class="tetris-image">
+        <div class="caption">Our AI Playing Tetris</div>
+    </div>
+    -->
+    <div class="infobox">
+        <h2>AI Tetris</h2>
+        <p>The Tetris Master 3000 depicted in a human form playing a version of Tetris where lines do not clear. The Tetris Master 3000 uses DQN and Reinforcement learning to play tetris (Now better than a human. Well at least any of our group members)</p>
+        <img src="/TetrisAI/images/ai_tetris.png" alt="Tetris AI" class="infobox-image">
+    </div>
+    <footer>
+        <p>&copy; 2024 AI Tetris Project. All rights reserved.</p>
+    </footer>
+</body>
+</html>
