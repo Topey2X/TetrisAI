@@ -23,8 +23,9 @@ def eval():
                      n_neurons=n_neurons, activations=activations, epsilon=0,
                      epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
                      discount=discount, replay_start_size=replay_start_size, train=False)
-    agent.load("ckpts\\1087_model.weights.h5")
-
+    agent.load("ckpts\\134282_model.weights.h5")
+    #agent.load("ckpts\\3415_model.weights.h5")
+    #while True:
     current_state = env.reset()
     done = False
     steps = 0
@@ -46,6 +47,16 @@ def eval():
         agent.add_to_memory(current_state, next_states[best_action], reward, done)
         current_state = next_states[best_action]
         steps += 1
+        
+    #if env.get_game_score() > 100000:
+        # break
+
+
+
+
+    #env.render(wait_ms=0)
+
+
 
 if __name__ == "__main__":
     eval()
