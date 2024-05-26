@@ -1,12 +1,8 @@
-from datetime import datetime
 from statistics import mean
-import random
 from tqdm import tqdm
-import torch
-
-from model2 import DQNAgent
+from agent import DQNAgent
 from tetris import Tetris
-import os
+from os import makedirs
 
 # Run DQN with Tetris
 def dqn():
@@ -17,8 +13,7 @@ def dqn():
     mem_size = 20000
     discount = 0.95
     batch_size = 512
-    epochs = 1
-    # render_every = 500
+    render_every = None
     render_every = None
     log_every = 50
     replay_start_size = 2000
@@ -33,17 +28,11 @@ def dqn():
                      epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
                      discount=discount, replay_start_size=replay_start_size)
 
-    # log_dir = f'logs/tetris-nn={str(n_neurons)}-mem={mem_size}-bs={batch_size}-e={epochs}-{datetime.now().strftime("%Y%m%d-%H%M%S")}'
-
     scores = []
     clearedLines = []
 
-    #rendering = False
 
     for episode in tqdm(range(episodes), desc="Training", unit="episodes"):
-        #if episode == 3000:
-        #    rendering = True
-
         current_state = env.reset()
         done = False
         steps = 0
@@ -75,13 +64,13 @@ def dqn():
 
         # Train
         if episode % train_every == 0:
-            agent.train(batch_size=batch_size, epochs=epochs)
+            agent.train(batch_size=batch_size)
 
         # Logs
         if log_every and episode and episode % log_every == 0:            
             # Save Weights
-            os.makedirs('ckpts', exist_ok=True)
-            agent.save(f'ckpts/{scores[-1]}_model.weights.h5')
+            makedirs('models', exist_ok=True)
+            agent.save(f'models/{scores[-1]}_model.weights.h5')
 
 if __name__ == "__main__":
     dqn()

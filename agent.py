@@ -104,7 +104,7 @@ class DQNAgent:
 
         return best_state
 
-    def train(self, batch_size=32, epochs=3):
+    def train(self, batch_size=32):
         if len(self.memory) >= self.replay_start_size and len(self.memory) >= batch_size:
             batch = random.sample(self.memory, batch_size)
 
