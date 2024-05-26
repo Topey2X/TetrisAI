@@ -20,13 +20,17 @@
         <li><a href="/TetrisAI/future.html">Future Work</a></li>
         <li class="about-link"><a href="/TetrisAI/about.html">About</a></li>
     </ul>
-    <p>Our environment is being directly interacted with and rendered using openCV and Pillow as opposed to running through GYM and rendered through pygame like previous versions of our code. Additionally we are using CUDA on the Nvidia GPU.</p>
+    <p>Our enviroment is built on numpy, manipulating an array representing the game board and secondary arrays representing each piece. It has the ability to render to the screen or record a video of the AI using OpenCV and Pillow (changed from an earlier version which used pygame)</p>
+    <p>The AI is currently trained on a standard 10x20 board, but the environment supports any reasonable sized board (as the board size gets wider, the time each step takes is increased proportionally) </p>
     <p>Our AI's hyperparameters are as follows</p>
     <ul class="reward-list"> 
-        <li>512 Batch Size.</li>
-        <li>Input space of 4.</li>
-        <li>Internal Neurons of 32, 32. </li>
-        <li>Output space of 1.</li>
+        <li>Batch Size: 512</li>
+        <li>Input space: 4</li>
+        <li>2x hidden layers: [32, 32]</li>
+        <li>Output space: 1</li>
+        <li>Memory size: 20,000</li>
+        <li>Persistant memory: 2000 (to reduce catastrophic forgetting)</li>
+        <li>Discount rate: 95%</li>
     </ul>
 
     <figure>

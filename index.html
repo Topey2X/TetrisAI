@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <h1> AI Tetris</h1>
+    <h1>AI Tetris</h1>
     <ul class="navbar">
 
         <li><a class="active" href="/TetrisAI">Home</a></li>
@@ -27,13 +27,14 @@
     </ul>
     
     <h2>What is Tetris</h2>
-    <p>Tetris is a classic tile matching video game created in 1984 where geometric shapes composed of four square blocks known as tetriminos fall from the top of the playing field of which there are 7 different types. Players must rotate and move these blocks to complete a line. When a line is complete it disappears and any blocks above get shifted down. The game ends when the stack of tetriminos reaches the top of the playing field. Essentially more lines you clear the bigger your score. </p>
-    <p>Our model will look to reward good moves and penalise bad ones.</p>
+    <p>Tetris is a classic tile matching video game created in 1984 where geometric shapes composed of four square blocks known as tetriminos fall into a 10x20 playing field grid.</p>
+    <p>There are 7 different types of tetrominos, detailed below. Players must rotate and move these blocks to complete a line. When a full line is complete (no gaps), it disappears and any blocks above get shifted down. The game ends when the stack of tetriminos reaches the top of the playing field without being cleared. Clearing more than one line with a single tetromino gives you more points, so to play the game optimally you should be trying to set up 4x clears, called a 'Tetris' </p>
+    <p>Our AI model is designed to find the best move in any given board and with any given active tetromino.</p>
     
-    <h2>What are good and bad moves</h2>
-    <p>Good moves include completing lines specifically more than one at a time, minimising the risk of creating a hole. </p>
-    <p>A good move that would be considered advanced specifically for an AI would be setting up the ability to clear multiple lines such as leaving a gap for a line piece so as to complete a tetris, when you clear four lines at once, this also rewards you with the most amount of points.</p>
-    <p>On the other hand bad moves are ones that create gaps and not rotating for optimal block placement.</p>
+    <h2>What are Good and Bad moves?</h2>
+    <p>Good moves include clearing lines, minimising holes and opening opportunities for combo line clears.</p>
+    <p>An advanced 'Good move' for our AI would be setting up tetris combos, gaining maximum points in the long run by sacrificing some points which could be gained earlier by completing rows 1 by 1.</p>
+    <p>Bad Moves create 'gaps' (holes where pieces cannot be placed) and 'towers' (stacking up without completing rows).</p>
 
 
     <div class="move-images">
@@ -57,13 +58,17 @@
         <img src="/TetrisAI/images/tetrominos.png" alt="Tetrominos">
     </figure>
     <h2>Our AI</h2>
-    <p>Our AI, the tetris master 3000 uses DQN and reinforcment learning to train our model and play the game. Below you can see our AI Training on the left side and playing on the right.</p>
+    <p>Our AI (the <b>Tetris Master 3000</b>) uses DQN and reinforcment learning to train our neural network model. Below you can see our AI Training on the left side and playing on the right.</p>
     <p>Our objective is for a given state, calculate the expected final reward. The game is run by providing the AI with all possible final states for the next block, and then the best state is chosen by the AI.</p>
-    <p>The benefits of using a model like us where we calculate the best expected final reward compared to that which tries to calculate the best move (rotating, move, drop) for the current board state is:</p>
+    <p>The benefits of using such a model, instead of calculating specific moves:</p>
     <ul class="reward-list"> 
-        <li>The AI can 'plan' for better scores such as aiming for a tetris.</li>
+        <li>The AI can 'plan' for better scores such as aiming for a tetris combo.</li>
         <li>The AI does not need to know which new block has been added, as the observation is of the final state.</li>
-        <li>The Input space can be metadata about the game board, instead of the actual game board, allowing for (1) smaller input space, and (2) more nuanced control over what the AI is optimising for.</li>
+        <li>The Input space can be metadata about the game board, instead of the actual game board, allowing for: <ul class="reward-list">
+            <li>Smaller input space</li>
+            <li>More nuanced control over what the AI is optimising for</li>
+            <li>Generalised outputs over any sized board</li>
+        </ul></li>
     </ul>
     <div class="video-section">
         <div class="video-container">
@@ -103,7 +108,7 @@
     </div>
    
     <h2>Playing on different sized tetris boards</h2>
-    <p>A benefit of our AI being provided all possible moves and getting it to select the best one is we are able to change the size of the tetris game and using the same trained data get insanly high scores still. The video below shows our AI playing on a 30 x 20 tetris board however it is using the same training as the video above where it was trained on a 10 x 20 board. </p>
+    <p>A benefit of our AI being provided 'metadata' about the game board is we are able to change the size of the tetris game and using the same model to achieve similar excellent results. The video below shows our AI playing on a 30 x 20 tetris board, using a model trained exclusively on a 10 x 20 board. </p>
     <h3>Tetris on a 30x20 board</h3>
     <iframe width="500" height="720" src="https://www.youtube.com/embed/cARrjwLb2kA?autoplay=1&mute=1&si=NP3EOtv0bSb3dkMB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 <!-- 
@@ -114,7 +119,7 @@
     -->
     <div class="infobox">
         <h2>AI Tetris</h2>
-        <p>The Tetris Master 3000 depicted in a human form playing a version of Tetris where lines do not clear. The Tetris Master 3000 uses DQN and Reinforcement learning to play tetris (Now better than a human. Well at least any of our group members)</p>
+        <p>The <b>Tetris Master 3000</b> depicted in a human form playing a version of Tetris where lines do not clear. The <b>Tetris Master 3000</b> uses DQN and Reinforcement learning to play tetris (Now better than its human developers!)</p>
         <img src="/TetrisAI/images/ai_tetris.png" alt="Tetris AI" class="infobox-image">
     </div>
     <footer>

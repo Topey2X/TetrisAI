@@ -16,20 +16,17 @@
         <li class="about-link"><a href="/TetrisAI/about.html">About</a></li>
     </ul>
     <h2>Overfitting</h2>
-    <p style="width: 80%;">Our current largest issue is the fact that our AI loves going for tetris' more than surviving. This can and will be tweaked in regards to the rewards. This issue can be seen in the below image where it ends the game rather than placing previous pieces and the line piece to continue.</p>
+    <p style="width: 80%;">Our current largest issue is the fact that our models tend to aim for tetris' more than surviving, leaving single columns on either side of the board for an 'I' piece that never comes. This issue can be seen in the below image where it ends the game rather than placing previous pieces and the line piece to continue.</p>
     <figure>
         <img style="width: 12%;" src="/TetrisAI/images/tetris_overfitting.png" alt="Overfitting">
         <figcaption>Tetris Overfitting Example</figcaption>
     </figure>
 
-    <h2>Leaving holes</h2>
-    <p>Our AI still leaves occasional holes when playing however this may just be the optimum move.</p>
-
     <h2>Skill Shots</h2>
-    <p>Our AI does not have the ability to do skill shots such as rotating a piece into place or sliding a piece under another piece which limits its ability in many cases and would probably lead to some of the leaving holes issues.</p>
+    <p>Our AI does not have the ability to do skill shots such as a 'spin move' (rotating a piece into place or sliding a piece under another piece) which limits its ability to find the most optimal game state.</p>
 
     <h2>Training Time</h2>
-    <p>A good problem to have is our training is taking longer and longer as we get a better model and games last longer the training time is greatly increased.</p>
+    <p>As the model improves, completing each episode takes longer and longer. This increases our training time. To improve this, we need to look into optimisation of the game environment itself.</p>
 
     <footer>
         <p>&copy; 2024 AI Tetris Project. All rights reserved.</p>

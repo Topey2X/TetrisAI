@@ -3,12 +3,14 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from time import sleep
+import os
 
 class Tetris:
     MAP_EMPTY = (0, (0, 0, 0))  # (state, color)
     MAP_BLOCK = 1
     BOARD_WIDTH = 10
     BOARD_HEIGHT = 20
+    RENDER_SCALE = 54
 
     TETROMINOS = {
         0: {
@@ -66,7 +68,19 @@ class Tetris:
         7: (200, 0, 200),# O
     }
 
-    def __init__(self):
+    def __init__(self, record = False):
+        x_mask = (np.arange(Tetris.BOARD_WIDTH*Tetris.RENDER_SCALE) % Tetris.RENDER_SCALE == 0)
+        y_mask = (np.arange(Tetris.BOARD_HEIGHT*Tetris.RENDER_SCALE) % Tetris.RENDER_SCALE == 0)
+        x_grid, y_grid = np.meshgrid(x_mask, y_mask)
+        self._grid_mask = x_grid | y_grid
+        self._recorder = None
+        if record:
+            while True:
+                self._file_name = f"temp{random.randint(0, 1000)}.avi"
+                if not os.path.exists(self._file_name):
+                    break
+            self._recorder = cv2.VideoWriter(self._file_name, cv2.VideoWriter_fourcc(*'MJPG'), 60.0, (Tetris.BOARD_WIDTH * Tetris.RENDER_SCALE, Tetris.BOARD_HEIGHT * Tetris.RENDER_SCALE))
+        
         self.reset()
 
     def reset(self):
@@ -237,12 +251,15 @@ class Tetris:
         self.current_rotation = rotation
 
         while not self._check_collision(self._get_rotated_piece(), self.current_pos):
-            if render:
+            if render and render_delay is not None:
                 self.render()
-                if render_delay:
+                if render_delay > 0:
                     sleep(render_delay)
             self.current_pos[1] += 1
         self.current_pos[1] -= 1
+        
+        if render_delay is None and render:
+            self.render()
 
         self.board = self._add_piece_to_board(self._get_rotated_piece(), self.current_pos)
         lines_cleared, self.board = self._clear_lines(self.board)
@@ -262,30 +279,38 @@ class Tetris:
         img = np.array(img).reshape(Tetris.BOARD_HEIGHT, Tetris.BOARD_WIDTH, 3).astype(np.uint8)
         img = img[..., ::-1]
         img = Image.fromarray(img, 'RGB')
-        img = img.resize((Tetris.BOARD_WIDTH * 25, Tetris.BOARD_HEIGHT * 25), resample=Image.NEAREST)
+        img = img.resize((Tetris.BOARD_WIDTH * Tetris.RENDER_SCALE, Tetris.BOARD_HEIGHT * Tetris.RENDER_SCALE), resample=Image.NEAREST)
         img = np.array(img)
         
+        img[self._grid_mask] = [0, 0, 0]
+                
         font = cv2.FONT_HERSHEY_SIMPLEX
-        font_scale = 0.5
+        font_scale = 1
         color = (255, 255, 255)
-        thickness = 1
+        thickness = 2
         line_type = cv2.LINE_AA
-
+                
         cv2.putText(img, 'Score:', (10, 30), font, font_scale, color, thickness, line_type)
-        cv2.putText(img, str(self.score), (60, 30), font, font_scale, color, thickness, line_type)
-        cv2.putText(img, 'Lines Cleared:', (10, 50), font, font_scale, color, thickness, line_type)
-        cv2.putText(img, str(self.clearedLines), (122, 50), font, font_scale, color, thickness, line_type)
-        
-        block_size = 25
-        for y in range(Tetris.BOARD_HEIGHT):
-            for x in range(Tetris.BOARD_WIDTH):
-                if self.board[y][x][0] != Tetris.MAP_EMPTY[0]:
-                    cv2.rectangle(img, (x*block_size, y*block_size), 
-                                  ((x+1)*block_size, (y+1)*block_size), 
-                                  (0, 0, 0), 1)
+        cv2.putText(img, str(self.score), (120, 30), font, font_scale, color, thickness, line_type)
+        cv2.putText(img, 'Lines Cleared:', (10, 70), font, font_scale, color, thickness, line_type)
+        cv2.putText(img, str(self.clearedLines), (240, 70), font, font_scale, color, thickness, line_type)
 
-        cv2.imshow('Tetris', img)
-        cv2.waitKey(wait_ms)
+        if self.game_over:
+            text, font_scale, thickness, bg_color, padding = 'Game Over!', 2, 4, (0, 0, 0), 10
+            text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
+            text_x, text_y = (Tetris.BOARD_WIDTH * Tetris.RENDER_SCALE - text_size[0]) // 2, (Tetris.BOARD_HEIGHT * Tetris.RENDER_SCALE + text_size[1]) // 2
+            cv2.rectangle(img, (text_x - padding, text_y - text_size[1] - padding), (text_x + text_size[0] + padding, text_y + padding), bg_color, cv2.FILLED)
+            cv2.putText(img, text, (text_x, text_y), font, font_scale, color, thickness, cv2.LINE_AA)
+
+        if self._recorder:
+            self._recorder.write(img)
+            if self.game_over:
+                self._recorder.release()
+                self._recorder = None
+                os.rename(self._file_name, f"tetris_{self.score}.avi")
+        else:
+            cv2.imshow('Tetris', img)
+            cv2.waitKey(wait_ms)
         
 if __name__ == "__main__":
     raise Exception("Unimplemented")

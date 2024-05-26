@@ -6,17 +6,19 @@ from agent import DQNAgent
 from tetris import Tetris
 from os import makedirs
 
+EXCEPTIONAL_SCORE_THRESHOLD = 100000
+
 # Run DQN with Tetris
 def dqn():
     env = Tetris()
-    episodes = 3500
+    episodes = 2000
     max_steps = None
     epsilon_stop_episode = 1500
     mem_size = 20000
     discount = 0.95
     batch_size = 512
     render_every = None
-    log_every = 50
+    log_every = 500
     replay_start_size = 2000
     train_every = 1
     n_neurons = [32, 32]
@@ -25,7 +27,7 @@ def dqn():
 
 
     agent = DQNAgent(env.get_state_size(),
-                     n_neurons=n_neurons, activations=activations,
+                     n_neurons=n_neurons, activations=activations, epsilon_min=0,
                      epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
                      discount=discount, replay_start_size=replay_start_size)
 
@@ -69,6 +71,13 @@ def dqn():
                 # Save Weights
                 makedirs("checkpoints", exist_ok=True)
                 agent.save(f"checkpoints\\{episode}-{mean(scores[-log_every:])}.weights.h5")
+            
+            # Exceptional Results
+            if scores[-1] > EXCEPTIONAL_SCORE_THRESHOLD:            
+                # Save Weights
+                makedirs("checkpoints", exist_ok=True)
+                agent.save(f"checkpoints\\_exceptional_{episode}-{scores[-1]}.weights.h5")
+                
     except KeyboardInterrupt:
         print("Training Interrupted!")
     
@@ -78,13 +87,27 @@ def dqn():
     
 
     # Plot Scores and Cleared Lines
-    plt.plot(scores, label='Scores')
+    fig, ax1 = plt.subplots()
+
+    color = 'tab:red'
+    ax1.set_xlabel('Episode')
+    ax1.set_ylabel('Scores', color=color)
+    ax1.plot(scores, color=color, label='Scores')
+    ax1.tick_params(axis='y', labelcolor=color)
+
+    ax2 = ax1.twinx()
+    color = 'tab:blue'
+    ax2.set_ylabel('Lines Cleared', color=color)
+    ax2.plot(clearedLines, color=color, label='Lines Cleared')
+    ax2.tick_params(axis='y', labelcolor=color)
+    
     x = np.arange(len(scores))
-    p = np.polyfit(x, scores, 2)
-    y = np.polyval(p, x)
-    plt.plot(x, y, label='Scores Trendline')
-    plt.plot(clearedLines, label='Lines Cleared')
-    plt.xlabel('Episode')
+    y = scores
+    z = np.polyfit(x, y, 2)
+    p = np.poly1d(z)
+    ax1.plot(x, p(x), color='orange', label='Best Fit')
+
+    fig.tight_layout()
     plt.title('Training Progress')
     plt.legend()
     plt.show()

@@ -2,30 +2,20 @@ from agent import DQNAgent
 from tetris import Tetris
 
 MIN_OUTCOME_SCORE = None # None or a minimum score to reach before stopping
-RENDER_LAST_FRAME_ONLY = False
-
-WEIGHTS_FILE = "checkpoints\_final_3499-50.06.weights.h5"
+RENDER_GAME = True # Whether to show the game while running, or just the final screen.
+RECORD_GAME = False # Saves a '.avi' video file instead of displaying the game (overrides RENDER_GAME)
+WEIGHTS_FILE = "BEST_MODEL.weights.h5"
 
 # Run DQN with Tetris
 def eval():
-    env = Tetris()
+    env = Tetris(RECORD_GAME)
     max_steps = None
-    epsilon_stop_episode = 1500
-    mem_size = 20000
-    discount = 0.95
-    batch_size = 512
-    epochs = 1
-    replay_start_size = 2000
     n_neurons = [32, 32]
-    render_delay = None
+    render_delay = 0 # set to None for max speed rendering
     activations = ['relu', 'relu', 'linear']
 
-    agent = DQNAgent(env.get_state_size(),
-                     n_neurons=n_neurons, activations=activations, epsilon=0,
-                     epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
-                     discount=discount, replay_start_size=replay_start_size, train=False)
+    agent = DQNAgent(env.get_state_size(), n_neurons=n_neurons, activations=activations, epsilon=0, train=False)
     agent.load(WEIGHTS_FILE)
-    
     
     while True:
         current_state = env.reset()
@@ -43,18 +33,20 @@ def eval():
                     best_action = action
                     break
 
-            reward, done = env.play(best_action[0], best_action[1], render=(not RENDER_LAST_FRAME_ONLY),
+            reward, done = env.play(best_action[0], best_action[1], render=RENDER_GAME,
                                     render_delay=render_delay)
             
             agent.add_to_memory(current_state, next_states[best_action], reward, done)
             current_state = next_states[best_action]
             steps += 1
             
+            if RECORD_GAME:
+                print(f"\rScore: {env.get_game_score()}", end="")
+            
         if (MIN_OUTCOME_SCORE is None) or (env.get_game_score() > MIN_OUTCOME_SCORE):
             break
 
-    if RENDER_LAST_FRAME_ONLY:
-        env.render(wait_ms=0)
+    env.render(wait_ms=0)
 
 
 if __name__ == "__main__":
