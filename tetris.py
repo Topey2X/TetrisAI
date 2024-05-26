@@ -286,3 +286,6 @@ class Tetris:
 
         cv2.imshow('Tetris', img)
         cv2.waitKey(wait_ms)
+        
+if __name__ == "__main__":
+    raise Exception("Unimplemented")

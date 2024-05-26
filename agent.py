@@ -46,7 +46,9 @@ class DQNAgent:
             replay_start_size = mem_size // 3
         self.replay_start_size = replay_start_size
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # Testing shows this is slower than using CPU only
+        self.device = torch.device("cpu")
         self.model = self._build_model().to(self.device)
 
     def _build_model(self):
@@ -142,3 +144,6 @@ class DQNAgent:
     def load(self, load_dir):
         self.model.load_state_dict(torch.load(load_dir))
         self.model.eval()
+
+if __name__ == "__main__":
+    raise Exception("Unimplemented")

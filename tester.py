@@ -1,8 +1,10 @@
 from agent import DQNAgent
 from tetris import Tetris
 
-MIN_OUTCOME_SCORE = 100000
-RENDER_LAST_FRAME_ONLY = True
+MIN_OUTCOME_SCORE = None # None or a minimum score to reach before stopping
+RENDER_LAST_FRAME_ONLY = False
+
+WEIGHTS_FILE = "checkpoints\_final_3499-50.06.weights.h5"
 
 # Run DQN with Tetris
 def eval():
@@ -22,7 +24,7 @@ def eval():
                      n_neurons=n_neurons, activations=activations, epsilon=0,
                      epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
                      discount=discount, replay_start_size=replay_start_size, train=False)
-    agent.load("ckpts\\134282_model.weights.h5")
+    agent.load(WEIGHTS_FILE)
     
     
     while True:
