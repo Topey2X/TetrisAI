@@ -10,7 +10,7 @@ class Tetris:
     MAP_BLOCK = 1
     BOARD_WIDTH = 10
     BOARD_HEIGHT = 20
-    RENDER_SCALE = 30
+    RENDER_SCALE = 40
 
     TETROMINOS = {
         0: {
@@ -126,9 +126,6 @@ class Tetris:
         self.current_pos = [3, 0]
         self.current_rotation = 0
 
-        if self._check_collision(self._get_rotated_piece(), self.current_pos):
-            self.game_over = True
-
     def _check_collision(self, piece, pos):
         for x, y in piece:
             x += pos[0]
@@ -136,6 +133,14 @@ class Tetris:
             if x < 0 or x >= Tetris.BOARD_WIDTH \
                     or y < 0 or y >= Tetris.BOARD_HEIGHT \
                     or self.board[y][x][0] == Tetris.MAP_BLOCK:
+                return True
+        return False
+    
+    def _check_game_over(self, piece, pos):
+        for x, y in piece:
+            x += pos[0]
+            y += pos[1]
+            if y < 0 or y > Tetris.BOARD_HEIGHT:
                 return True
         return False
 
@@ -245,7 +250,9 @@ class Tetris:
                 if pos[1] >= 0:
                     board = self._add_piece_to_board(piece, pos)
                     states[(x, rotation)] = self._get_board_props(board)
-
+        if len(states) == 0:
+            self.game_over = True
+            states[(0, 0)] = self._get_board_props(self.board)
         return states
 
     def get_state_size(self):
@@ -262,6 +269,9 @@ class Tetris:
                     sleep(render_delay)
             self.current_pos[1] += 1
         self.current_pos[1] -= 1
+        
+        if self._check_game_over(self._get_rotated_piece(), self.current_pos):
+            self.game_over = True
         
         if render_delay is None and render:
             self.render()

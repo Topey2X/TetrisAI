@@ -29,7 +29,7 @@ def dqn():
 
 
     agent = DQNAgent(env.get_state_size(),
-                     n_neurons=n_neurons, activations=activations, epsilon_min=0.0001,
+                     n_neurons=n_neurons, activations=activations, epsilon=0.01, epsilon_min=0.0001,
                      epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
                      discount=discount, replay_start_size=replay_start_size)
 
@@ -76,7 +76,7 @@ def dqn():
             if log_every and episode and episode % log_every == 0:            
                 # Save Weights
                 makedirs("checkpoints", exist_ok=True)
-                agent.save(f"checkpoints\\{episode}-{mean(scores[-log_every:])}.weights.h5")
+                agent.save(f"checkpoints\\{episode}-{mean(scores[-1])}.weights.h5")
             
             # Exceptional Results
             if scores[-1] > EXCEPTIONAL_SCORE_THRESHOLD:            
@@ -89,7 +89,7 @@ def dqn():
     
     # Save Weights
     makedirs("checkpoints", exist_ok=True)
-    agent.save(f"checkpoints\\_final_{episodes}-{mean(scores[-log_every:])}.weights.h5")
+    agent.save(f"checkpoints\\_final_{episodes}-{mean(scores[-1])}.weights.h5")
     
 
     # Plot Scores and Cleared Lines

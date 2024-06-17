@@ -5,10 +5,12 @@ from agent import DQNAgent
 
 
 class TetrisAI:
+    # Amusingly, this AI will only give up if it has absolutely no moves left
     def __init__(self, tetris):
         n_neurons = [32, 32]
         activations = ["relu", "relu", "linear"]
-        weights_file = "BEST_MODEL.weights.h5"
+        weights_file = "checkpoints\_exceptional_1212-2723457.weights.h5" # HARD MODE
+        # weights_file = "Best Models\\134282\\17_model.weights.h5" # EASY MODE
 
         self.tetris: Tetris = tetris
         self.current_state = self.tetris.reset()
@@ -23,6 +25,9 @@ class TetrisAI:
 
     def do_move(self):
         next_states = self.tetris.get_next_states()
+        if len(next_states) == 0:
+            return False
+        
         best_state = self.agent.best_state(next_states.values())
         for action, state in next_states.items():
             if state == best_state:
@@ -32,10 +37,14 @@ class TetrisAI:
         reward, done = self.tetris.play(move[0], move[1])
         self.agent.add_to_memory(self.current_state, next_states[move], reward, done)
         self.current_state = next_states[move]
+        return done
 
 
 class HumanVsTetris(Tetris):
     FPS = 30
+    MAX_SPEED = 1 # seconds per move
+    MIN_SPEED = 5 # seconds per move
+    MAX_SPEED_STEPS = 300
 
     def __init__(self):
         self.AI_game = Tetris()
@@ -72,12 +81,14 @@ class HumanVsTetris(Tetris):
         super().reset()
         self.AI_game.reset()
         self.AI = TetrisAI(self.AI_game)
-        self.time_per_piece = 5
-        self.reset_piece_timer()
         self.steps = 0
+        self.reset_piece_timer()
+        self.hover_x = 3
 
     def reset_piece_timer(self):
-        self.piece_timer = self.time_per_piece * self.FPS  # 30 fps
+        # Take 300 steps to get to max speed
+        self.time_per_piece = self.FPS * ((self.MAX_SPEED_STEPS-self.steps)/self.MAX_SPEED_STEPS) * (self.MIN_SPEED - self.MAX_SPEED) + self.MAX_SPEED
+        self.piece_timer = 0  # 30 fps
 
     def handle_input(self):
         for event in pygame.event.get():
@@ -94,7 +105,8 @@ class HumanVsTetris(Tetris):
                         ):
                             self._rotate(-90)
                 case pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
+                    if (event.button == 1) and (self.piece_timer > 0.15*self.FPS):
+                        # Prevents the player from adding a second piece too quickly
                         self.play_piece()
 
         mouse_x, _ = pygame.mouse.get_pos()
@@ -118,7 +130,7 @@ class HumanVsTetris(Tetris):
         self.game_surface.fill("black")  # Clear the board surface
         self.ai_surface.fill("black")  # Clear the board surface
 
-        time_left = np.clip(self.piece_timer / (self.time_per_piece * 30), 0, 1)
+        time_left = np.clip((self.time_per_piece - self.piece_timer) / (self.time_per_piece), 0, 1)
         bar_width = time_left * self.screen_width
         if time_left > 0.6:
             color = "green"
@@ -277,17 +289,77 @@ class HumanVsTetris(Tetris):
         self.AI.do_move()
         self.reset_piece_timer()
         self.steps += 1
+        self.hover_x = 3
+        
+    def show_game_over_screen(self):
+        self.screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 72)
+        if self.AI_game.game_over and self.game_over:
+            text_surface = font.render("It's a Tie!", True, "white")
+        elif self.AI_game.game_over:
+            text_surface = font.render("Human Wins!", True, "white")
+        else:
+            text_surface = font.render("AI Wins!", True, "white")
+            
+        
+        text_rect = text_surface.get_rect(center=(self.screen_width // 2, self.screen_height // 2 - 100))
+        self.screen.blit(text_surface, text_rect)
+        
+        font_small = pygame.font.SysFont(None, 36)
+        reset_text = font_small.render("Press [SPACE] to Restart", True, "white")
+        reset_rect = reset_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2 + 100))
+        self.screen.blit(reset_text, reset_rect)
+        
+        # Display scores
+        human_score = self.score
+        ai_score = self.AI_game.score
+        if human_score > ai_score:
+            human_score_color = "green"
+            ai_score_color = "white"
+        elif ai_score > human_score:
+            human_score_color = "white"
+            ai_score_color = "green"
+        else:  # tie
+            human_score_color = ai_score_color = "white"
+
+        human_score_text = font_small.render(f'Human Score: {human_score}', True, human_score_color)
+        ai_score_text = font_small.render(f'AI Score: {ai_score}', True, ai_score_color)
+
+        human_score_rect = human_score_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+        ai_score_rect = ai_score_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2 + 50))
+
+        self.screen.blit(human_score_text, human_score_rect)
+        self.screen.blit(ai_score_text, ai_score_rect)
+        
+        pygame.display.flip()
+        
+        # Wait for user input to restart or quit
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.reset()
+                        waiting = False
+                    elif event.key == pygame.K_q:
+                        pygame.quit()
+                        exit()
 
     def run(self):
-        while not self.game_over:
-            self.handle_input()
-            self.piece_timer -= 1
-            if self.piece_timer <= 0:
-                self.play_piece()
-            self.render()
-            self.clock.tick(self.FPS)
+        while True:
+            while not (self.game_over or self.AI_game.game_over):
+                self.handle_input()
+                self.piece_timer += 1
+                if self.piece_timer >= self.time_per_piece:
+                    self.play_piece()
+                self.render()
+                self.clock.tick(self.FPS)
+            self.show_game_over_screen()
 
 
 if __name__ == "__main__":
-    game = HumanVsTetris()  # Adjust the time per piece as needed
+    game = HumanVsTetris()
     game.run()
