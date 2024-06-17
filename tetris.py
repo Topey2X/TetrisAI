@@ -68,7 +68,8 @@ class Tetris:
         7: (200, 0, 200),# O
     }
 
-    def __init__(self, record = False):
+    def __init__(self, record = False, seed = None):
+        self.seed = seed
         x_mask = (np.arange(Tetris.BOARD_WIDTH*Tetris.RENDER_SCALE) % Tetris.RENDER_SCALE == 0)
         y_mask = (np.arange(Tetris.BOARD_HEIGHT*Tetris.RENDER_SCALE) % Tetris.RENDER_SCALE == 0)
         x_grid, y_grid = np.meshgrid(x_mask, y_mask)
@@ -84,15 +85,19 @@ class Tetris:
         self.reset()
 
     def reset(self):
+        self.rng = random.Random(self.seed) # Random number generator
         self.board = [[Tetris.MAP_EMPTY] * Tetris.BOARD_WIDTH for _ in range(Tetris.BOARD_HEIGHT)]
         self.game_over = False
         self.bag = list(range(len(Tetris.TETROMINOS)))
-        random.shuffle(self.bag)
+        self.rng.shuffle(self.bag)
         self.next_piece = self.bag.pop()
         self._new_round()
         self.score = 0
         self.clearedLines = 0
         return self._get_board_props(self.board)
+        
+    def get_new_seed(self):
+        return random.randint(0, 10000)
 
     def _get_rotated_piece(self):
         return Tetris.TETROMINOS[self.current_piece][self.current_rotation]
@@ -114,7 +119,7 @@ class Tetris:
     def _new_round(self):
         if len(self.bag) == 0:
             self.bag = list(range(len(Tetris.TETROMINOS)))
-            random.shuffle(self.bag)
+            self.rng.shuffle(self.bag)
         
         self.current_piece = self.next_piece
         self.next_piece = self.bag.pop()
@@ -270,7 +275,7 @@ class Tetris:
 
         self._new_round()
         if self.game_over:
-            score -= 2
+            score -= 20
 
         return score, self.game_over
 
