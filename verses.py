@@ -67,10 +67,11 @@ class HumanVsTetris(Tetris):
             + self.title_height
             + self.scoreboard_height
         )
-        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.RESIZABLE)
 
         pygame.display.set_caption("TetrisAI vs Humanity")
         self.clock = pygame.time.Clock()
+        self.main_surface = pygame.Surface((self.screen_width, self.screen_height))
         self.game_surface = pygame.Surface((self.game_width, self.game_height))
         self.ai_surface = pygame.Surface((self.game_width, self.game_height))
         
@@ -108,10 +109,15 @@ class HumanVsTetris(Tetris):
                     if (event.button == 1) and (self.piece_timer > 0.15*self.FPS):
                         # Prevents the player from adding a second piece too quickly
                         self.play_piece()
+                case pygame.VIDEORESIZE:
+                    self.screen = pygame.display.set_mode((max(self.screen_width, event.w), max(self.screen_height, event.h)), pygame.RESIZABLE)
 
         mouse_x, _ = pygame.mouse.get_pos()
-
-        if mouse_x >= self.game_width:
+        window_width, window_height = self.screen.get_size()
+        main_surface_rect = self.main_surface.get_rect(center=(window_width // 2, window_height // 2))
+        mouse_x -= main_surface_rect.topleft[0]
+        
+        if mouse_x >= self.game_width or mouse_x < 0:
             return
 
         # Clamp hover_x to valid board width range
@@ -127,6 +133,7 @@ class HumanVsTetris(Tetris):
 
     def render(self):
         self.screen.fill((50, 50, 50))  # Clear the screen
+        self.main_surface.fill((50, 50, 50))  # Clear the board surface
         self.game_surface.fill("black")  # Clear the board surface
         self.ai_surface.fill("black")  # Clear the board surface
 
@@ -141,7 +148,7 @@ class HumanVsTetris(Tetris):
         else:
             color = "red"
         pygame.draw.rect(
-            self.screen, color, pygame.Rect(0, 0, bar_width, self.bar_height)
+            self.main_surface, color, pygame.Rect(0, 0, bar_width, self.bar_height)
         )
 
         # Draw the Human board
@@ -195,7 +202,7 @@ class HumanVsTetris(Tetris):
                             Tetris.RENDER_SCALE - 2,
                         ),
                     )
-        self.screen.blits(
+        self.main_surface.blits(
             [
                 (
                     self.game_surface,
@@ -231,7 +238,7 @@ class HumanVsTetris(Tetris):
         ai_lines_surface = font.render(
             f"Lines Cleared: {self.AI_game.clearedLines}", True, "white"
         )
-        self.screen.blits(
+        self.main_surface.blits(
             [
                 ( # Human title
                     human_title_surface,
@@ -273,6 +280,10 @@ class HumanVsTetris(Tetris):
             ]
         )
 
+        window_width, window_height = self.screen.get_size()
+        main_surface_rect = self.main_surface.get_rect(center=(window_width // 2, window_height // 2))
+        self.screen.blit(self.main_surface, main_surface_rect.topleft)
+
         pygame.display.flip()
 
     def get_ghost_y(self, piece):
@@ -292,7 +303,8 @@ class HumanVsTetris(Tetris):
         self.hover_x = 3
         
     def show_game_over_screen(self):
-        self.screen.fill((0, 0, 0))
+        self.screen.fill((50, 50, 50))
+        self.main_surface.fill((50, 50, 50))
         font = pygame.font.SysFont(None, 72)
         if self.AI_game.game_over and self.game_over:
             text_surface = font.render("It's a Tie!", True, "white")
@@ -303,12 +315,12 @@ class HumanVsTetris(Tetris):
             
         
         text_rect = text_surface.get_rect(center=(self.screen_width // 2, self.screen_height // 2 - 100))
-        self.screen.blit(text_surface, text_rect)
+        self.main_surface.blit(text_surface, text_rect)
         
         font_small = pygame.font.SysFont(None, 36)
         reset_text = font_small.render("Press [SPACE] to Restart", True, "white")
         reset_rect = reset_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2 + 100))
-        self.screen.blit(reset_text, reset_rect)
+        self.main_surface.blit(reset_text, reset_rect)
         
         # Display scores
         human_score = self.score
@@ -328,8 +340,12 @@ class HumanVsTetris(Tetris):
         human_score_rect = human_score_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
         ai_score_rect = ai_score_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2 + 50))
 
-        self.screen.blit(human_score_text, human_score_rect)
-        self.screen.blit(ai_score_text, ai_score_rect)
+        self.main_surface.blit(human_score_text, human_score_rect)
+        self.main_surface.blit(ai_score_text, ai_score_rect)
+        
+        window_width, window_height = self.screen.get_size()
+        main_surface_rect = self.main_surface.get_rect(center=(window_width // 2, window_height // 2))
+        self.screen.blit(self.main_surface, main_surface_rect.topleft)
         
         pygame.display.flip()
         
