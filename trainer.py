@@ -6,13 +6,15 @@ from agent import DQNAgent
 from tetris import Tetris
 from os import makedirs, path
 
-EXCEPTIONAL_SCORE_THRESHOLD = 100000
+EXCEPTIONAL_SCORE_THRESHOLD = 1000000
 
 # Run DQN with Tetris
 def dqn():
     env = Tetris()
-    episodes = 10000
+    episodes = 5000
     max_steps = None
+    epsilon_start = 0.01
+    epsilon_stop = 0.0001
     epsilon_stop_episode = 500
     mem_size = 20000
     discount = 0.99
@@ -25,11 +27,11 @@ def dqn():
     render_delay = None
     activations = ['relu', 'relu', 'linear']
     # previous_weights = None
-    previous_weights = "BEST_MODEL.weights.h5"
+    previous_weights = "checkpoints\_exceptional_1213-1439235.weights.h5"
 
 
     agent = DQNAgent(env.get_state_size(),
-                     n_neurons=n_neurons, activations=activations, epsilon=0.01, epsilon_min=0.0001,
+                     n_neurons=n_neurons, activations=activations, epsilon=epsilon_start, epsilon_min=epsilon_stop,
                      epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
                      discount=discount, replay_start_size=replay_start_size)
 
