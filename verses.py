@@ -9,7 +9,7 @@ class TetrisAI:
     def __init__(self, tetris):
         n_neurons = [32, 32]
         activations = ["relu", "relu", "linear"]
-        weights_file = "checkpoints\_exceptional_1212-2723457.weights.h5" # HARD MODE
+        weights_file = "checkpoints\_exceptional_862-2762084.weights.h5" # HARD MODE
         # weights_file = "Best Models\\134282\\17_model.weights.h5" # EASY MODE
 
         self.tetris: Tetris = tetris
@@ -98,13 +98,19 @@ class HumanVsTetris(Tetris):
                     pygame.quit()
                     exit()
                 case pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        self._rotate(90)
-                        if self._check_collision(
-                            self._get_rotated_piece(),
-                            [self.current_pos[0], self.current_pos[1]],
-                        ):
-                            self._rotate(-90)
+                    match event.key:
+                        case pygame.K_SPACE:
+                            self._rotate(90)
+                            # if self._check_collision(
+                            #     self._get_rotated_piece(),
+                            #     [self.current_pos[0], self.current_pos[1]],
+                            # ):
+                            #     self._rotate(-90)
+                        case pygame.K_LEFT:
+                            self._rotate(-90);
+                        case pygame.K_RIGHT:
+                            self._rotate(90);
+                    
                 case pygame.MOUSEBUTTONDOWN:
                     if (event.button == 1) and (self.piece_timer > 0.15*self.FPS):
                         # Prevents the player from adding a second piece too quickly

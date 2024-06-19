@@ -11,7 +11,7 @@ EXCEPTIONAL_SCORE_THRESHOLD = 1000000
 # Run DQN with Tetris
 def dqn():
     env = Tetris()
-    episodes = 5000
+    episodes = 50
     max_steps = None
     epsilon_start = 0.01
     epsilon_stop = 0.0001
@@ -78,7 +78,7 @@ def dqn():
             if log_every and episode and episode % log_every == 0:            
                 # Save Weights
                 makedirs("checkpoints", exist_ok=True)
-                agent.save(f"checkpoints\\{episode}-{mean(scores[-1])}.weights.h5")
+                agent.save(f"checkpoints\\{episode}-{scores[-1]}.weights.h5")
             
             # Exceptional Results
             if scores[-1] > EXCEPTIONAL_SCORE_THRESHOLD:            
@@ -91,7 +91,7 @@ def dqn():
     
     # Save Weights
     makedirs("checkpoints", exist_ok=True)
-    agent.save(f"checkpoints\\_final_{episodes}-{mean(scores[-1])}.weights.h5")
+    agent.save(f"checkpoints\\_final_{episodes}-{scores[-1]}.weights.h5")
     
 
     # Plot Scores and Cleared Lines
