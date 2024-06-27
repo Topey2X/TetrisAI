@@ -4,32 +4,40 @@ from statistics import mean
 from tqdm import tqdm
 from agent import DQNAgent
 from tetris import Tetris
-from os import makedirs
+from os import makedirs, path
 
-EXCEPTIONAL_SCORE_THRESHOLD = 100000
+EXCEPTIONAL_SCORE_THRESHOLD = 1000000
 
 # Run DQN with Tetris
 def dqn():
     env = Tetris()
-    episodes = 2000
+    episodes = 50
     max_steps = None
-    epsilon_stop_episode = 1500
+    epsilon_start = 0.01
+    epsilon_stop = 0.0001
+    epsilon_stop_episode = 500
     mem_size = 20000
-    discount = 0.95
+    discount = 0.99
     batch_size = 512
     render_every = None
-    log_every = 500
+    log_every = None
     replay_start_size = 2000
     train_every = 1
     n_neurons = [32, 32]
     render_delay = None
     activations = ['relu', 'relu', 'linear']
+    # previous_weights = None
+    previous_weights = "checkpoints\_exceptional_1213-1439235.weights.h5"
 
 
     agent = DQNAgent(env.get_state_size(),
-                     n_neurons=n_neurons, activations=activations, epsilon_min=0,
+                     n_neurons=n_neurons, activations=activations, epsilon=epsilon_start, epsilon_min=epsilon_stop,
                      epsilon_stop_episode=epsilon_stop_episode, mem_size=mem_size,
                      discount=discount, replay_start_size=replay_start_size)
+
+    if previous_weights and path.exists(previous_weights):
+        agent.load(previous_weights)
+        print(f"Loaded weights from {previous_weights}")
 
     scores = []
     clearedLines = []
@@ -70,7 +78,7 @@ def dqn():
             if log_every and episode and episode % log_every == 0:            
                 # Save Weights
                 makedirs("checkpoints", exist_ok=True)
-                agent.save(f"checkpoints\\{episode}-{mean(scores[-log_every:])}.weights.h5")
+                agent.save(f"checkpoints\\{episode}-{scores[-1]}.weights.h5")
             
             # Exceptional Results
             if scores[-1] > EXCEPTIONAL_SCORE_THRESHOLD:            
@@ -83,7 +91,7 @@ def dqn():
     
     # Save Weights
     makedirs("checkpoints", exist_ok=True)
-    agent.save(f"checkpoints\\_final_{episodes}-{mean(scores[-log_every:])}.weights.h5")
+    agent.save(f"checkpoints\\_final_{episodes}-{scores[-1]}.weights.h5")
     
 
     # Plot Scores and Cleared Lines

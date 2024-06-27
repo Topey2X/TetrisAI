@@ -10,7 +10,7 @@ class Tetris:
     MAP_BLOCK = 1
     BOARD_WIDTH = 10
     BOARD_HEIGHT = 20
-    RENDER_SCALE = 30
+    RENDER_SCALE = 40
 
     TETROMINOS = {
         0: {
@@ -68,7 +68,8 @@ class Tetris:
         7: (200, 0, 200),# O
     }
 
-    def __init__(self, record = False):
+    def __init__(self, record = False, seed = None):
+        self.seed = seed
         x_mask = (np.arange(Tetris.BOARD_WIDTH*Tetris.RENDER_SCALE) % Tetris.RENDER_SCALE == 0)
         y_mask = (np.arange(Tetris.BOARD_HEIGHT*Tetris.RENDER_SCALE) % Tetris.RENDER_SCALE == 0)
         x_grid, y_grid = np.meshgrid(x_mask, y_mask)
@@ -84,15 +85,19 @@ class Tetris:
         self.reset()
 
     def reset(self):
+        self.rng = random.Random(self.seed) # Random number generator
         self.board = [[Tetris.MAP_EMPTY] * Tetris.BOARD_WIDTH for _ in range(Tetris.BOARD_HEIGHT)]
         self.game_over = False
         self.bag = list(range(len(Tetris.TETROMINOS)))
-        random.shuffle(self.bag)
+        self.rng.shuffle(self.bag)
         self.next_piece = self.bag.pop()
         self._new_round()
         self.score = 0
         self.clearedLines = 0
         return self._get_board_props(self.board)
+        
+    def get_new_seed(self):
+        return random.randint(0, 10000)
 
     def _get_rotated_piece(self):
         return Tetris.TETROMINOS[self.current_piece][self.current_rotation]
@@ -114,15 +119,12 @@ class Tetris:
     def _new_round(self):
         if len(self.bag) == 0:
             self.bag = list(range(len(Tetris.TETROMINOS)))
-            random.shuffle(self.bag)
+            self.rng.shuffle(self.bag)
         
         self.current_piece = self.next_piece
         self.next_piece = self.bag.pop()
         self.current_pos = [3, 0]
         self.current_rotation = 0
-
-        if self._check_collision(self._get_rotated_piece(), self.current_pos):
-            self.game_over = True
 
     def _check_collision(self, piece, pos):
         for x, y in piece:
@@ -131,6 +133,14 @@ class Tetris:
             if x < 0 or x >= Tetris.BOARD_WIDTH \
                     or y < 0 or y >= Tetris.BOARD_HEIGHT \
                     or self.board[y][x][0] == Tetris.MAP_BLOCK:
+                return True
+        return False
+    
+    def _check_game_over(self, piece, pos):
+        for x, y in piece:
+            x += pos[0]
+            y += pos[1]
+            if y < 0 or y > Tetris.BOARD_HEIGHT:
                 return True
         return False
 
@@ -240,7 +250,9 @@ class Tetris:
                 if pos[1] >= 0:
                     board = self._add_piece_to_board(piece, pos)
                     states[(x, rotation)] = self._get_board_props(board)
-
+        if len(states) == 0:
+            self.game_over = True
+            states[(0, 0)] = self._get_board_props(self.board)
         return states
 
     def get_state_size(self):
@@ -258,6 +270,9 @@ class Tetris:
             self.current_pos[1] += 1
         self.current_pos[1] -= 1
         
+        if self._check_game_over(self._get_rotated_piece(), self.current_pos):
+            self.game_over = True
+        
         if render_delay is None and render:
             self.render()
 
@@ -270,7 +285,7 @@ class Tetris:
 
         self._new_round()
         if self.game_over:
-            score -= 2
+            score -= 20
 
         return score, self.game_over
 
