@@ -101,6 +101,21 @@ class Tetris:
 
     def _get_rotated_piece(self):
         return Tetris.TETROMINOS[self.current_piece][self.current_rotation]
+    
+    def _get_next_piece(self):
+        # Return the ID of the next piece
+        return Tetris.TETROMINOS[self.next_piece][0]
+    
+    def _get_next_piece_board(self):
+        # Create a small 4x4 grid for the next piece
+        next_piece_grid = [[Tetris.MAP_EMPTY for _ in range(4)] for _ in range(4)]
+        next_piece = Tetris.TETROMINOS[self.next_piece][0]  # Always use default orientation (0 degrees)
+        
+        for x, y in next_piece:
+            if 0 <= x < 4 and 0 <= y < 4:
+                next_piece_grid[y][x] = (Tetris.MAP_BLOCK, Tetris.COLORS[self.next_piece + 1])
+        
+        return next_piece_grid
 
     def _get_complete_board(self):
         piece = self._get_rotated_piece()
@@ -290,41 +305,68 @@ class Tetris:
         return score, self.game_over
 
     def render(self, wait_ms=1):
+        # Main game board
         img = [cell[1] for row in self._get_complete_board() for cell in row]
         img = np.array(img).reshape(Tetris.BOARD_HEIGHT, Tetris.BOARD_WIDTH, 3).astype(np.uint8)
-        img = img[..., ::-1]
+        img = img[..., ::-1]  # Convert RGB to BGR for OpenCV
         img = Image.fromarray(img, 'RGB')
         img = img.resize((Tetris.BOARD_WIDTH * Tetris.RENDER_SCALE, Tetris.BOARD_HEIGHT * Tetris.RENDER_SCALE), resample=Image.NEAREST)
         img = np.array(img)
-        
         img[self._grid_mask] = [0, 0, 0]
-                
+
+        # Render the next piece
+        next_piece_board = self._get_next_piece_board()
+        next_img = [cell[1] for row in next_piece_board for cell in row]
+        next_img = np.array(next_img).reshape(4, 4, 3).astype(np.uint8)
+        next_img = next_img[..., ::-1]  # Convert RGB to BGR
+        next_img = Image.fromarray(next_img, 'RGB')
+        next_img = next_img.resize((4 * Tetris.RENDER_SCALE, 4 * Tetris.RENDER_SCALE), resample=Image.NEAREST)
+        next_img = np.array(next_img)
+
+        # Add a black border around the next piece grid
+        next_img_with_border = np.zeros((5 * Tetris.RENDER_SCALE, 5 * Tetris.RENDER_SCALE, 3), dtype=np.uint8)
+        next_img_with_border[Tetris.RENDER_SCALE//2:-Tetris.RENDER_SCALE//2, Tetris.RENDER_SCALE//2:-Tetris.RENDER_SCALE//2] = next_img
+
+        # Combine the images (main board and next piece preview)
+        combined_height = max(img.shape[0], next_img_with_border.shape[0])
+        combined_width = img.shape[1] + next_img_with_border.shape[1] + Tetris.RENDER_SCALE
+
+        combined_img = np.zeros((combined_height, combined_width, 3), dtype=np.uint8)
+        combined_img[:img.shape[0], :img.shape[1]] = img
+        combined_img[:next_img_with_border.shape[0], img.shape[1] + Tetris.RENDER_SCALE:] = next_img_with_border
+
+        # Add text for "Next Piece" label
         font = cv2.FONT_HERSHEY_SIMPLEX
         font_scale = 1
         color = (255, 255, 255)
         thickness = 2
         line_type = cv2.LINE_AA
-                
-        cv2.putText(img, 'Score:', (10, 30), font, font_scale, color, thickness, line_type)
-        cv2.putText(img, str(self.score), (120, 30), font, font_scale, color, thickness, line_type)
-        cv2.putText(img, 'Lines Cleared:', (10, 70), font, font_scale, color, thickness, line_type)
-        cv2.putText(img, str(self.clearedLines), (240, 70), font, font_scale, color, thickness, line_type)
 
+        cv2.putText(combined_img, 'Next Piece:', (img.shape[1] + Tetris.RENDER_SCALE, Tetris.RENDER_SCALE), font, font_scale, color, thickness, line_type)
+
+        # Add score and lines cleared
+        cv2.putText(combined_img, 'Score:', (10, 30), font, font_scale, color, thickness, line_type)
+        cv2.putText(combined_img, str(self.score), (120, 30), font, font_scale, color, thickness, line_type)
+        cv2.putText(combined_img, 'Lines Cleared:', (10, 70), font, font_scale, color, thickness, line_type)
+        cv2.putText(combined_img, str(self.clearedLines), (240, 70), font, font_scale, color, thickness, line_type)
+
+        # Display "Game Over" if applicable
         if self.game_over:
             text, font_scale, thickness, bg_color, padding = 'Game Over!', 2, 4, (0, 0, 0), 10
             text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
-            text_x, text_y = (Tetris.BOARD_WIDTH * Tetris.RENDER_SCALE - text_size[0]) // 2, (Tetris.BOARD_HEIGHT * Tetris.RENDER_SCALE + text_size[1]) // 2
-            cv2.rectangle(img, (text_x - padding, text_y - text_size[1] - padding), (text_x + text_size[0] + padding, text_y + padding), bg_color, cv2.FILLED)
-            cv2.putText(img, text, (text_x, text_y), font, font_scale, color, thickness, cv2.LINE_AA)
+            text_x, text_y = (combined_img.shape[1] - text_size[0]) // 2, (combined_img.shape[0] + text_size[1]) // 2
+            cv2.rectangle(combined_img, (text_x - padding, text_y - text_size[1] - padding), (text_x + text_size[0] + padding, text_y + padding), bg_color, cv2.FILLED)
+            cv2.putText(combined_img, text, (text_x, text_y), font, font_scale, color, thickness, cv2.LINE_AA)
 
+        # Save to video or display on screen
         if self._recorder:
-            self._recorder.write(img)
+            self._recorder.write(combined_img)
             if self.game_over:
                 self._recorder.release()
                 self._recorder = None
                 os.rename(self._file_name, f"tetris_{self.score}.avi")
         else:
-            cv2.imshow('Tetris', img)
+            cv2.imshow('Tetris', combined_img)
             cv2.waitKey(wait_ms)
         
 if __name__ == "__main__":
