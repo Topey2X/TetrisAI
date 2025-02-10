@@ -61,7 +61,7 @@ class HumanVsTetris(Tetris):
         self.game_width = Tetris.BOARD_WIDTH * Tetris.RENDER_SCALE
         self.game_height = Tetris.BOARD_HEIGHT * Tetris.RENDER_SCALE
         self.game_offset = 10
-        self.screen_width = (self.game_width * 2) + (self.game_offset * 3)
+        self.screen_width = (self.game_width * 3) + (self.game_offset * 3)
         self.screen_height = (
             self.game_height
             + self.bar_height
@@ -75,6 +75,7 @@ class HumanVsTetris(Tetris):
         self.main_surface = pygame.Surface((self.screen_width, self.screen_height))
         self.game_surface = pygame.Surface((self.game_width, self.game_height))
         self.ai_surface = pygame.Surface((self.game_width, self.game_height))
+        self.next_piece_surface = pygame.Surface((self.game_width, self.game_height))
         
     def reset(self):
         new_seed = self.get_new_seed()
@@ -209,6 +210,16 @@ class HumanVsTetris(Tetris):
                             Tetris.RENDER_SCALE - 2,
                         ),
                     )
+        pygame.draw.rect(
+            self.next_piece_surface,
+            (255,0,0),
+            pygame.Rect(
+                0,
+                0,
+                self.game_width*2,
+                self.game_height,
+            )
+        )            
         self.main_surface.blits(
             [
                 (
@@ -216,9 +227,13 @@ class HumanVsTetris(Tetris):
                     (self.game_offset, self.bar_height + self.title_height),
                 ),
                 (
+                    self.next_piece_surface,
+                    (self.game_offset*1.5 + self.game_width, self.bar_height + self.title_height),
+                ),
+                (
                     self.ai_surface,
                     (
-                        self.game_width + self.game_offset + self.game_offset,
+                        self.game_width + self.game_offset + self.game_offset + self.game_width,
                         self.bar_height + self.title_height,
                     ),
                 ),
@@ -257,7 +272,7 @@ class HumanVsTetris(Tetris):
                 ( # AI title
                     ai_title_surface,
                     (
-                        self.game_width
+                        self.game_width + self.game_width
                         + self.game_offset
                         + self.game_width // 2
                         - ai_title_surface.get_width() // 2,
@@ -273,14 +288,14 @@ class HumanVsTetris(Tetris):
                 ( # AI Score and Lines Cleared
                     ai_score_surface,
                     (
-                        self.game_width + self.game_offset + 10,
+                        self.game_width + self.game_width + self.game_offset + 10,
                         self.game_height + self.bar_height + self.title_height + 5,
                     ),
                 ),
                 (
                     ai_lines_surface,
                     (
-                        self.game_width + self.game_offset + 10,
+                        self.game_width + self.game_width + self.game_offset + 10,
                         self.game_height + self.bar_height + self.title_height + 30,
                     ),
                 ),
