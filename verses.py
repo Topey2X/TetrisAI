@@ -9,7 +9,7 @@ class TetrisAI:
     def __init__(self, tetris):
         n_neurons = [32, 32]
         activations = ["relu", "relu", "linear"]
-        weights_file = "checkpoints\_exceptional_862-2762084.weights.h5" # HARD MODE
+        weights_file = "BEST_MODEL.weights.h5" # HARD MODE
         # weights_file = "Best Models\\134282\\17_model.weights.h5" # EASY MODE
 
         self.tetris: Tetris = tetris
@@ -372,13 +372,18 @@ class HumanVsTetris(Tetris):
 
     def run(self):
         while True:
-            while not (self.game_over or self.AI_game.game_over):
-                self.handle_input()
-                self.piece_timer += 1
-                if self.piece_timer >= self.time_per_piece:
-                    self.play_piece()
+            while not (self.AI_game.game_over or (self.game_over and self.AI_game.score >= self.score)):
+                if not self.game_over:  # Allow human input only if still playing
+                    self.handle_input()
+                    self.piece_timer += 1
+                    if self.piece_timer >= self.time_per_piece:
+                        self.play_piece()
+                else:  # Human is dead, only let AI continue
+                    self.AI.do_move()
+                
                 self.render()
                 self.clock.tick(self.FPS)
+            
             self.show_game_over_screen()
 
 

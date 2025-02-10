@@ -3,8 +3,8 @@ from tetris import Tetris
 
 MIN_OUTCOME_SCORE = None # None or a minimum score to reach before stopping
 RENDER_GAME = True # Whether to show the game while running, or just the final screen.
-RECORD_GAME = True # Saves a '.avi' video file instead of displaying the game (overrides RENDER_GAME)
-WEIGHTS_FILE = "checkpoints\_exceptional_1212-2723457.weights.h5"
+RECORD_GAME = False # Saves a '.avi' video file instead of displaying the game (overrides RENDER_GAME)
+WEIGHTS_FILE = "BEST_MODEL.weights.h5"
 
 # Run DQN with Tetris
 def eval():
