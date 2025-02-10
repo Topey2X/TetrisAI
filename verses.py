@@ -49,6 +49,7 @@ class HumanVsTetris(Tetris):
     def __init__(self):
         self.AI_game = Tetris()
         self.setup_pygame()
+        self.next_piece_surface = pygame.Surface((Tetris.RENDER_SCALE * 4, Tetris.RENDER_SCALE * 4))
         super().__init__()
 
     def setup_pygame(self):
